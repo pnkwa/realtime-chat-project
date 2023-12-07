@@ -1,27 +1,56 @@
-import React from "react";
-import logo from "./logo.svg";
-import "reflect-metadata";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
+import Message from "./Message";
 
-function App() {
+
+interface Message {
+  username: string;
+  text: string;
+}
+
+interface AppProps {}
+
+const socket = io("http://localhost:8000");
+
+const App: React.FC<AppProps> = () => {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [messageText, setMessageText] = useState<string>("");
+
+    useEffect(() => {
+        socket.on("message", (message: Message) => {
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
+
+        // Clean up the socket listener when the component unmounts
+        return () => {
+            socket.off("message");
+        };
+    }, []);
+
+    const sendMessage = () => {
+        socket.emit("sendMessage", { text: messageText });
+        setMessageText("");
+    };
+
     return (
-        <div className="bg-gray-200 min-h-screen flex items-center justify-center">
-            <header className="text-center">
-                <img src={logo} className="h-40" alt="logo" />
-                <p className="text-xl mt-4">
-          Edit <code className="font-bold">src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="text-blue-500 hover:underline mt-2 block"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-          Learn React
-                </a>
-            </header>
+        <div className="App">
+            <h1>Real-Time Chat App</h1>
+            <div className="messages">
+                {messages.map((message, index) => (
+                    <Message key={index} username={message.username} text={message.text} />
+                ))}
+            </div>
+            <div className="input-box">
+                <input
+                    type="text"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                    placeholder="Type your message..."
+                />
+                <button onClick={sendMessage}>Send</button>
+            </div>
         </div>
     );
-}
+};
 
 export default App;
