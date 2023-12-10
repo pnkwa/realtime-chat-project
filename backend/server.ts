@@ -2,7 +2,7 @@ import express = require("express");
 import http = require("http");
 import { Application, Request, Response } from "express";
 import { Server } from "socket.io";
-import * as cors from "cors";
+import cors from "cors";
 
 const app: Application = express();
 
@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Express + TypeScript Server");
-});
+}); 
 
 server.listen(PORT, () => {
 	console.log(`Server is running at http://localhost:${PORT}`);

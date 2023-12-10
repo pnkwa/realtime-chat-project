@@ -1,18 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+// eslint-disable-next-line no-mixed-spaces-and-tabs
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number
+	@PrimaryGeneratedColumn()
+		id: number;
 
-    @Column()
-    firstName: string
+	@Column()
+		firstName: string;
 
-    @Column()
-    lastName: string
+	@Column()
+		lastName: string;
 
-    @Column()
-    age: number
+	@Column()
+		age: number;
 
 }
