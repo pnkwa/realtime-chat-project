@@ -23,7 +23,7 @@ router.get("/user/myprofile", async (req, res) => {
 
 
 //get user by id
-router.get("/user/myprofile:id", async (req, res) => {
+router.get("/user/myprofile/:id", async (req, res) => {
 	try {
 		const userId: number = parseInt(req.params.id);
 	
@@ -92,7 +92,7 @@ router.post("/user/myprofile", uploadfile.single("file"), async (req, res) => {
 });
 
 //update
-router.put("/user/myprofile:id", async (req, res) => {
+router.put("/user/myprofile/:id", async (req, res) => {
 	try {
 		const userId: number = parseInt(req.params.id);
 	
@@ -116,7 +116,7 @@ router.put("/user/myprofile:id", async (req, res) => {
 });
 
 //delete
-router.delete("/user/myprofile:id", async (req, res) => {
+router.delete("/user/myprofile/:id", async (req, res) => {
 	const userId: number = parseInt(req.params.id);
 
 	try {
