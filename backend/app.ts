@@ -1,5 +1,5 @@
 import express from "express";
-import userRoutes from "./User/user.controller";
+import userRoutes from "./UserTest/userTest.controller";
 import { AppDataSource } from "../backend/config/data-source";
 
 const app = express();

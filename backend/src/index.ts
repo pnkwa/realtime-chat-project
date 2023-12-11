@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/data-source";
-import { User } from "../User/user.model";
+import { Test } from "../UserTest/userTest.model";
 
 AppDataSource.initialize().then(async () => {
 
@@ -13,7 +13,7 @@ AppDataSource.initialize().then(async () => {
 	// console.log("Saved a new user with id: " + user.id);
 
 	console.log("Loading users from the database...");
-	const users = await AppDataSource.manager.find(User);
+	const users = await AppDataSource.manager.find(Test);
 	console.log("Loaded users: ", users);
 
 	console.log("Here you can setup and run express / fastify / any other framework.");
