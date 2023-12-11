@@ -1,10 +1,12 @@
 import express from "express";
-import userRoutes from "./UserTest/userTest.controller";
+import testRoutes from "./UserTest/userTest.controller";
+import userRoutes from "./User/user.controller";
 import { AppDataSource } from "../backend/config/data-source";
 
 const app = express();
 
 app.use(express.json());
+
 
 AppDataSource.initialize()
 	.then(() => {
@@ -14,10 +16,13 @@ AppDataSource.initialize()
 		console.error("Error during Data Source initialization", err);
 	});
 
+
+app.use("/", testRoutes);
 app.use("/", userRoutes);
-
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`);
+const port = 5001; 
+app.listen(port, () => {
+	console.log(`Server is running on port ${port}`);
 });
+
+
+

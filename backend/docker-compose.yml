@@ -1,17 +1,14 @@
-# Use postgres/example user/password credentials
 version: '3.1'
 
 services:
-
-  db:
+  db-postgres:
     image: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
-
-  adminer:
-    image: adminer
-    restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
+    volumes:
+      - /path/on/host:/var/lib/postgresql/data
+    container_name: backend-db-postgres-1

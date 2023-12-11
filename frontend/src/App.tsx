@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import io from "socket.io-client";
 import Message from "./Message";
-
+import axios from "axios";
 
 interface Message {
   username: string;
@@ -15,6 +15,9 @@ const socket = io("http://localhost:8000");
 const App: React.FC<AppProps> = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageText, setMessageText] = useState<string>("");
+    const [file, setFile] = useState<File | null>(null);
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
 
     useEffect(() => {
         socket.on("message", (message: Message) => {
@@ -30,6 +33,32 @@ const App: React.FC<AppProps> = () => {
     const sendMessage = () => {
         socket.emit("sendMessage", { text: messageText });
         setMessageText("");
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+        }
+    };
+
+    const upload = () => {
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("username", username);
+            formData.append("password", password);
+
+            axios.post("http://localhost:5001/user/myprofile", formData)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error("Error uploading file:", error);
+                });
+        } else {
+            console.error("No file selected");
+        }
     };
 
     return (
@@ -48,6 +77,24 @@ const App: React.FC<AppProps> = () => {
                     placeholder="Type your message..."
                 />
                 <button onClick={sendMessage}>Send</button>
+            </div>
+
+            <div>
+                <input type="file" onChange={handleFileChange}></input>
+                <button type="button" onClick={upload}>Upload</button>
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                />
+
             </div>
         </div>
     );
