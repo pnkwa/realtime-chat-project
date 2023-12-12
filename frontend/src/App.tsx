@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import io from "socket.io-client";
 import Message from "./Message";
 import axios from "axios";
@@ -15,7 +15,8 @@ const socket = io("http://localhost:8000");
 const App: React.FC<AppProps> = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageText, setMessageText] = useState<string>("");
-    const [file, setFile] = useState<File | null>(null);
+
+    const [image, setImage] = useState<File | null>(null);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -35,17 +36,23 @@ const App: React.FC<AppProps> = () => {
         setMessageText("");
     };
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
-            setFile(selectedFile);
+            setImage(selectedFile);
         }
     };
 
+    const inputRef = useRef<HTMLInputElement>(null!);
+    const hangleImageClick = () => {
+        inputRef.current.click();
+    };
+
+
     const upload = () => {
-        if (file) {
+        if (image) {
             const formData = new FormData();
-            formData.append("file", file);
+            formData.append("file", image);
             formData.append("username", username);
             formData.append("password", password);
 
@@ -62,7 +69,7 @@ const App: React.FC<AppProps> = () => {
     };
 
     return (
-        <div className="App">
+        <>
             <h1>Real-Time Chat App</h1>
             <div className="messages">
                 {messages.map((message, index) => (
@@ -78,10 +85,21 @@ const App: React.FC<AppProps> = () => {
                 />
                 <button onClick={sendMessage}>Send</button>
             </div>
+            <h1>Singup</h1>
+
+            <div onClick={hangleImageClick}>
+                {image ? <img src={URL.createObjectURL(image)} alt="" /> : <img src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg" alt="" />}
+                <input 
+                    type="file" 
+                    onChange={handleImageChange}
+                    ref={inputRef}
+                    style={{display: "none"}}
+                />
+
+            </div>
+
 
             <div>
-                <input type="file" onChange={handleFileChange}></input>
-                <button type="button" onClick={upload}>Upload</button>
                 <input
                     type="text"
                     value={username}
@@ -94,9 +112,11 @@ const App: React.FC<AppProps> = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
-
             </div>
-        </div>
+
+            <button type="button" onClick={upload}>Singup</button>
+
+        </>
     );
 };
 
