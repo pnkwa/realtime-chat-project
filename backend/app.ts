@@ -1,7 +1,8 @@
 import express from "express";
-import testRoutes from "./UserTest/userTest.controller";
-import userRoutes from "./User/user.controller";
-import { AppDataSource } from "../backend/config/data-source";
+import userRoutes from "./src/User/user.controller";
+import chatRoutes from "./src/Chat/chat.controller";
+import msgRoutes from "./src/Message/message.controller";
+import { AppDataSource } from "./src/config/data-source";
 import cors from "cors";
 const app = express();
 
@@ -18,8 +19,10 @@ AppDataSource.initialize()
 	});
 
 
-app.use("/", testRoutes);
 app.use("/", userRoutes);
+app.use("/", chatRoutes);
+app.use("/", msgRoutes);
+
 const port = 5001; 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);

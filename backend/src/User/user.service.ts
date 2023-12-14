@@ -60,8 +60,6 @@ export async function createUser(req, res) {
 		user.password = password;
 		user.profileImage = filePath;
 
-		console.log("test: post req "+profileImage);
-
 		await userRepository.save(user);
 
 		res.json(user);

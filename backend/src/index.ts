@@ -1,5 +1,5 @@
-import { AppDataSource } from "../config/data-source";
-import { Test } from "../UserTest/userTest.model";
+import { AppDataSource } from "./config/data-source";
+import { Test } from "./UserTest/userTest.model";
 
 AppDataSource.initialize().then(async () => {
 
