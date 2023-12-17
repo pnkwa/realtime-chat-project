@@ -26,12 +26,12 @@ export async function getAllUsers(req, res) {
 
 export async function getUserById(req, res) {
 	try {
-		const userId: number = parseInt(req.params.id);
+		const userId: string = req.params.id;
 	
-		if (isNaN(userId)) {
-			res.status(400).json({ error: "Invalid user ID" });
-			return;
-		}
+		// if (isNaN(userId)) {
+		// 	res.status(400).json({ error: "Invalid user ID" });
+		// 	return;
+		// }
 	
 		const user = await userRepository.findOneBy(({
 			userId: userId,
@@ -71,7 +71,7 @@ export async function createUser(req, res) {
 
 export async function updateUser(req, res) {
 	try {
-		const userId: number = parseInt(req.params.id);
+		const userId: string = req.params.id;
 	
 		const { username, password, profileImage } = req.body;
 	
@@ -93,7 +93,7 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-	const userId: number = parseInt(req.params.id);
+	const userId: string = req.params.id;
 
 	try {
 		const user = await userRepository.findOneBy(({

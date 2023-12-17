@@ -35,12 +35,21 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-input-emoji:
+    specifier: ^5.6.5
+    version: 5.6.5(react-dom@18.2.0)(react@18.2.0)
+  react-redux:
+    specifier: ^9.0.4
+    version: 9.0.4(@types/react@18.2.42)(react@18.2.0)(redux@5.0.0)
   react-router-dom:
     specifier: ^6.20.1
     version: 6.20.1(react-dom@18.2.0)(react@18.2.0)
   react-scripts:
     specifier: 5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.23.3)(@babel/plugin-transform-react-jsx@7.23.4)(eslint@8.55.0)(react@18.2.0)(typescript@4.9.5)
+  redux:
+    specifier: ^5.0.0
+    version: 5.0.0
   socket.io-client:
     specifier: ^4.7.2
     version: 4.7.2
@@ -1720,6 +1729,20 @@ packages:
       postcss-selector-parser: 6.0.13
     dev: false
 
+  /@emoji-mart/data@1.1.2:
+    resolution: {integrity: sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==}
+    dev: false
+
+  /@emoji-mart/react@1.1.1(emoji-mart@5.5.2)(react@18.2.0):
+    resolution: {integrity: sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==}
+    peerDependencies:
+      emoji-mart: ^5.2
+      react: ^16.8 || ^17 || ^18
+    dependencies:
+      emoji-mart: 5.5.2
+      react: 18.2.0
+    dev: false
+
   /@eslint-community/eslint-utils@4.4.0(eslint@8.55.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2656,6 +2679,10 @@ packages:
 
   /@types/trusted-types@2.0.7:
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    dev: false
+
+  /@types/use-sync-external-store@0.0.3:
+    resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
     dev: false
 
   /@types/ws@8.5.10:
@@ -4579,6 +4606,10 @@ packages:
   /emittery@0.8.1:
     resolution: {integrity: sha512-uDfvUjVrfGJJhymx/kz6prltenw1u7WrCg1oa94zYY8xxVpLLUu045LAT0dhDZdXG58/EpPL/5kA180fQ/qudg==}
     engines: {node: '>=10'}
+    dev: false
+
+  /emoji-mart@5.5.2:
+    resolution: {integrity: sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==}
     dev: false
 
   /emoji-regex@8.0.0:
@@ -8708,6 +8739,20 @@ packages:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
     dev: false
 
+  /react-input-emoji@5.6.5(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-TtvWCoco+ext3sr8/0Q/4itCm06H2PXH++XHinblT6Y97V43UU3YzUUnlv0U6eM0yfJuFTxs8LdjAMeS+jj6ag==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=17.0.x'
+      react-dom: '>=17.0.x'
+    dependencies:
+      '@emoji-mart/data': 1.1.2
+      '@emoji-mart/react': 1.1.1(emoji-mart@5.5.2)(react@18.2.0)
+      emoji-mart: 5.5.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -8717,6 +8762,28 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-redux@9.0.4(@types/react@18.2.42)(react@18.2.0)(redux@5.0.0):
+    resolution: {integrity: sha512-9J1xh8sWO0vYq2sCxK2My/QO7MzUMRi3rpiILP/+tDr8krBHixC6JMM17fMK88+Oh3e4Ae6/sHIhNBgkUivwFA==}
+    peerDependencies:
+      '@types/react': ^18.2.25
+      react: ^18.0
+      react-native: '>=0.69'
+      redux: ^5.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-native:
+        optional: true
+      redux:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.42
+      '@types/use-sync-external-store': 0.0.3
+      react: 18.2.0
+      redux: 5.0.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /react-refresh@0.11.0:
@@ -8896,6 +8963,10 @@ packages:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+    dev: false
+
+  /redux@5.0.0:
+    resolution: {integrity: sha512-blLIYmYetpZMET6Q6uCY7Jtl/Im5OBldy+vNPauA8vvsdqyt66oep4EUpAMWNHauTC6xa9JuRPhRB72rY82QGA==}
     dev: false
 
   /reflect.getprototypeof@1.0.4:
@@ -10122,6 +10193,14 @@ packages:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+    dev: false
+
+  /use-sync-external-store@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /util-deprecate@1.0.2:

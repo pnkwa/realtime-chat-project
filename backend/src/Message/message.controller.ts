@@ -25,7 +25,7 @@ router.post("/message",async (req:Request, res:Response) => {
 
 // get message
 router.get("/message/:chatId",async (req:Request, res:Response) => {
-	const chatId:number = parseInt(req.params.chatId);
+	const chatId:string = req.params.chatId;
 
 	try{
 		const result = await msgRespository.find({

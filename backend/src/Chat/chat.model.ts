@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeor
 @Entity()
 export class Chat {
     @PrimaryGeneratedColumn()
-    	chatId: number;
+    	chatId: string;
     @Column("text", { array: true })
     	members: string[];
     @CreateDateColumn({type: "timestamp"})

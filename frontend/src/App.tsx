@@ -5,6 +5,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Singup from "./components/login/Singup";
 import Login from "./components/login/Login";
+import Chat from "./page/Chat/Chat";
 
 // interface Message {
 //   username: string;
@@ -56,6 +57,7 @@ const App: React.FC<AppProps> = () => {
             <Routes>
                 <Route path="/signup" element={<Singup/>}></Route>
                 <Route path="/login" element={<Login/>}></Route>
+                <Route path="/chat" element={<Chat/>}></Route>
             </Routes>
 
         </>
