@@ -1,8 +1,7 @@
 .ChatBox-container {
-    background: var(--cardColor);
+    background: rgb(240, 240, 240);
     border-radius: 1rem;
-    display: grid;
-    grid-template-rows: 14vh 60vh 13vh;
+    width: 800px;
 }
 
 .chat-header {
@@ -21,7 +20,7 @@
 
 .message {
 
-  background: var(--buttonBg);
+  background: linear-gradient(98.63deg, #ce4980 0%, #d77aff 100%);
   color: white;
   padding: 0.7rem;
   border-radius: 1rem 1rem 1rem 0;
@@ -30,6 +29,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  
 }
 
 .message>span:nth-child(2){

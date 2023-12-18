@@ -1,10 +1,20 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import express from "express";
 import userRoutes from "./src/User/user.controller";
 import chatRoutes from "./src/Chat/chat.controller";
 import msgRoutes from "./src/Message/message.controller";
 import { AppDataSource } from "./src/config/data-source";
 import cors from "cors";
+import { Server } from "http";
+import { Server as SocketIOServer, Socket } from "socket.io";
+
+interface ActiveUser {
+  userId: string;
+  socketId: string;
+}
+
 const app = express();
+const httpServer = new Server(app);
 
 app.use(express.json());
 app.use(cors());
@@ -18,15 +28,60 @@ AppDataSource.initialize()
 		console.error("Error during Data Source initialization", err);
 	});
 
-
 app.use("/", userRoutes);
 app.use("/", chatRoutes);
 app.use("/", msgRoutes);
 
-const port = 5001; 
-app.listen(port, () => {
+const port = 5001;
+const server = httpServer.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
 
+const io = new SocketIOServer(server, {
+	cors: {
+		origin: "*",
+	},
+});
 
+let activeUsers: ActiveUser[] = [];
 
+io.on("connection", (socket: Socket) => {
+	// Add new User
+	socket.on("new-user-add", (newUserId: string) => {
+		// If user is not added previously
+		if (!activeUsers.some((user) => user.userId === newUserId)) {
+			activeUsers.push({
+				userId: newUserId,
+				socketId: socket.id,
+			});
+		}
+		console.log("Connected Users", activeUsers);
+		io.emit("get-users", activeUsers);
+	});
+
+	// Send message
+	socket.on("send-message", (data) => {
+		const { receiverId } = data;
+		console.log("Active Users", activeUsers);
+		const user = activeUsers.find((user) => user.userId === receiverId);
+
+		console.log("Sending from socket to : ", receiverId);
+		console.log("Data ", data);
+		console.log("Socket user ", user);
+
+		if (user) {
+			console.log("Have user");
+			io.to(user.socketId).emit("receive-message", data);
+		}
+	});
+
+	socket.on("disconnect", () => {
+		activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+
+		console.log("After Disconnect", activeUsers);
+
+		io.emit("get-users", activeUsers);
+	});
+});
+
+export default httpServer;
