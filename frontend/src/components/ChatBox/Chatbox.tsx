@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { getUser } from "../../api/UserRequests";
 import { addMessages, getMassages } from "../../api/MessageRequets";
 import InputEmoji from "react-input-emoji";
 import TimeAgo from "react-timeago";
 
-interface chatBoxProps {
+interface ChatBoxProps {
   chat: {
     chatId: string;
     members: string[];
@@ -19,7 +20,7 @@ interface chatBoxProps {
     }
   ) => void;
 
-  receiveMessage: ReceiveMessage;
+  receivedMessages: Message[];
 }
 
 interface Message {
@@ -27,7 +28,7 @@ interface Message {
   senderId: string;
   text: string;
   createAt: string;
-  chatId: string
+  chatId: string;
 }
 
 interface UserData {
@@ -35,27 +36,17 @@ interface UserData {
   profileImage: string;
 }
 
-interface ReceiveMessage {
-    msgId: string;
-    senderId: string;
-    text: string;
-    createAt: string;
-    chatId: string;
-    receiverId: string;
-}
-
-const ChatBox: React.FC<chatBoxProps> = ({
+const ChatBox: React.FC<ChatBoxProps> = ({
     chat,
     currentUserId,
     setSendMessage,
-    receiveMessage,
+    receivedMessages,
 }) => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
 
     useEffect(() => {
-    // Fetch user data when the chat changes
         const getUserData = async () => {
             try {
                 if (chat?.members) {
@@ -75,7 +66,6 @@ const ChatBox: React.FC<chatBoxProps> = ({
     }, [chat, currentUserId]);
 
     useEffect(() => {
-    // Fetch messages when the chat changes
         const fetchMessages = async () => {
             try {
                 if (chat) {
@@ -91,15 +81,21 @@ const ChatBox: React.FC<chatBoxProps> = ({
     }, [chat]);
 
     useEffect(() => {
-    // Receive a new message and update state
-        if (receiveMessage !== null && receiveMessage.chatId == chat?.chatId) {
-            console.log("Data received in child ChatBox: ", receiveMessage);
-            setMessages([...messages, receiveMessage]);
+        if (Array.isArray(receivedMessages)) {
+            receivedMessages.forEach((message) => {
+                console.log("Chat ID:", message.chatId);
+                // Access other properties like senderId, text, etc. if needed
+            });
+        } else {
+            console.warn("receivedMessages is not an array:", receivedMessages);
         }
-    }, [receiveMessage]);
+    
+        // ... rest of your code
+    }, [receivedMessages, chat, setMessages]);
+    
 
-    const handleChange = (newMessages: string) => {
-        setNewMessage(newMessages);
+    const handleChange = (newMessage: string) => {
+        setNewMessage(newMessage);
     };
 
     const handleSend = async (e: React.FormEvent) => {
@@ -109,24 +105,20 @@ const ChatBox: React.FC<chatBoxProps> = ({
             senderId: currentUserId,
             text: newMessage,
         };
-    
+
         try {
-           
-            // Send the message to the socket server
             const receiverId = chat?.members.find((id) => id != currentUserId);
             if (receiverId) {
-                setSendMessage({...message, receiverId});
+                setSendMessage({ ...message, receiverId });
             }
 
-            // Send the message to the database
             const { data } = await addMessages(message);
-            setMessages([...messages, data]);
+            setMessages((prevMessages) => [...prevMessages, data]);
             setNewMessage("");
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
-    
 
     if (!chat) {
         return <div>Tap on a Chat to start Conversation</div>;
@@ -150,17 +142,18 @@ const ChatBox: React.FC<chatBoxProps> = ({
             <hr />
             <div className="chat-body">
                 {messages.map((message) => (
-                    <div
-                        key={message.msgId}
-                        className={
-                            message.senderId === currentUserId ? "message own" : "message"
-                        }
-                    >
-                        <span>{message.text}</span>
-                        <span>
-                            <TimeAgo date={message.createAt} />
-                        </span>
-                    </div>
+                    <>            
+                        <div
+                            className={
+                                message.senderId === currentUserId ? "message own" : "message"
+                            }
+                        >
+                            <span>{message.text}</span>
+                            <span>
+                                <TimeAgo date={message.createAt} />
+                            </span>
+                        </div>
+                    </>
                 ))}
             </div>
 

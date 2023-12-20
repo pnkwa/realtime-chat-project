@@ -24,14 +24,12 @@ export default function Login() {
     text: string;
   }
 
-  interface ReceiveMessage {
-    // msgId: string;
+  interface ReceivedMessage {
     msgId: string;
     senderId: string;
     text: string;
     createAt: string;
     chatId: string;
-    receiverId: string;
   }
   
   interface OnlineUser {
@@ -46,7 +44,7 @@ export default function Login() {
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[] | null>(null);
   const [sendMessage, setSendMessage] = useState<Message | null>(null);
-  const [receiveMessage, setReceiveMessage] = useState<ReceiveMessage>({ msgId: "", senderId: "", text: "", createAt: "", chatId: "", receiverId: "" });
+  const [receiveMessages, setReceiveMessages] = useState<ReceivedMessage[]>([]);
 
   const socket = useRef<Socket | null>(null);
 
@@ -60,10 +58,15 @@ export default function Login() {
           });
 
           setUser(response.data.user);
+          console.log("user login" , response.data.user);
       } catch (error) {
           console.error("Login failed: ", error);
       }
   };
+
+  useEffect(() => {
+      console.log("user login", user);
+  }, [user]);
 
   useEffect(() => {
       const getChats = async () => {
@@ -78,22 +81,34 @@ export default function Login() {
               console.log(error);
           }
       };
-
       getChats();
   }, [user]);
 
   useEffect(() => {
       // Initialize the socket only if the user is logged in
-      if(user !== null){
+      if (user !== null) {
           socket.current = io("http://localhost:5001");
           socket.current.emit("new-user-add", user.userId);
           socket.current.on("get-users", (users: OnlineUser[]) => {
               setOnlineUsers(users);
-              console.log("Updated onlineUsers: ", onlineUsers);
+              console.log("Updated onlineUsers: ", users);
+          });
+
+          // Set up the receive-message event listener
+          socket.current.on("receive-message", (data) => {
+              console.log("Received message from server: ", data);
+              setReceiveMessages(data);
           });
       }
-      
+
+      // Clean up socket connection on component unmount
+      return () => {
+          if (socket.current !== null) {
+              socket.current.disconnect();
+          }
+      };
   }, [user]);
+
 
 
   // sending message from socket server
@@ -103,16 +118,27 @@ export default function Login() {
       }
   }, [sendMessage]);
 
+
   // receive message from socket server
   useEffect(() => {
-      if(socket.current !== null) {
+      if (socket.current !== null) {
+          console.log("Setting up receive-message event listener");
           socket.current.on("receive-message", (data) => {
-              console.log("Data Received in parent Chat.ts " , data);
-              setReceiveMessage(data);
+              console.log("Received message from socket: ", data);
+              setReceiveMessages((prevMessages) => [...prevMessages, data]);
           });
       }
-     
-  }, []);
+
+      return () => {
+          // Clean up the event listener when the component unmounts
+          if (socket.current !== null) {
+              console.log("Cleaning up receive-message event listener");
+              socket.current.off("receive-message");
+          }
+      };
+  }, [socket]);
+
+
 
   return (
       <>
@@ -147,6 +173,17 @@ export default function Login() {
                     ))}
                               </div>
                           </div>
+
+                          {onlineUsers && (
+                              <div>
+                                  <h2>Online Users</h2>
+                                  {onlineUsers.map((onlineUser) => (
+                                      <div key={onlineUser.userId}>
+                                          <p>{onlineUser.userId}</p>
+                                      </div>
+                                  ))}
+                              </div>
+                          )}
                       </div>
 
                       {/* Right side */}
@@ -155,7 +192,7 @@ export default function Login() {
                               chat={currentChat}
                               currentUserId={user.userId}
                               setSendMessage={setSendMessage}
-                              receiveMessage={receiveMessage}
+                              receivedMessages={receiveMessages}
                           ></ChatBox>
 
                       </div>

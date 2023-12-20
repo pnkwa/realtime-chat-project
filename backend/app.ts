@@ -61,25 +61,35 @@ io.on("connection", (socket: Socket) => {
 
 	// Send message
 	socket.on("send-message", (data) => {
-		const { receiverId } = data;
-		console.log("Active Users", activeUsers);
-		const user = activeUsers.find((user) => user.userId === receiverId);
+		const { receiverId, chatId, senderId, text } = data as {
+			receiverId: string;
+			chatId: string;
+			senderId: string;
+			text: string;
+		};
+		
+		const user = activeUsers.find((user) => user.userId == receiverId);
 
 		console.log("Sending from socket to : ", receiverId);
-		console.log("Data ", data);
+		console.log("Data ", { chatId, senderId, text });
 		console.log("Socket user ", user);
 
 		if (user) {
-			console.log("Have user");
-			io.to(user.socketId).emit("receive-message", data);
+			console.log("start receive msg!!");
+			io.to(user.socketId).emit("receive-message", {
+				chatId,
+				senderId,
+				text
+			});
 		}
+	});
+
+	socket.on("receive-message", (data) => {
+		console.log("Received message on server: ", data);
 	});
 
 	socket.on("disconnect", () => {
 		activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-
-		console.log("After Disconnect", activeUsers);
-
 		io.emit("get-users", activeUsers);
 	});
 });
