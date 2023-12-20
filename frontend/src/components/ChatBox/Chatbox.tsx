@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { getUser } from "../../api/UserRequests";
 import { addMessages, getMassages } from "../../api/MessageRequets";
@@ -81,17 +81,16 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     }, [chat]);
 
     useEffect(() => {
-        if (Array.isArray(receivedMessages)) {
-            receivedMessages.forEach((message) => {
-                console.log("Chat ID:", message.chatId);
-                // Access other properties like senderId, text, etc. if needed
-            });
-        } else {
-            console.warn("receivedMessages is not an array:", receivedMessages);
-        }
+        if (receivedMessages && typeof receivedMessages === "object" && !Array.isArray(receivedMessages)) {
+            // Convert the object into an array
+            const receivedMessagesArray = [receivedMessages];
     
-        // ... rest of your code
-    }, [receivedMessages, chat, setMessages]);
+            // Update the messages state with the received messages array
+            setMessages((prevMessages) => [...prevMessages, ...receivedMessagesArray]);
+        
+        }
+    }, [receivedMessages, chat]);
+    
     
 
     const handleChange = (newMessage: string) => {
@@ -142,18 +141,19 @@ const ChatBox: React.FC<ChatBoxProps> = ({
             <hr />
             <div className="chat-body">
                 {messages.map((message) => (
-                    <>            
-                        <div
-                            className={
-                                message.senderId === currentUserId ? "message own" : "message"
-                            }
-                        >
-                            <span>{message.text}</span>
-                            <span>
-                                <TimeAgo date={message.createAt} />
-                            </span>
-                        </div>
-                    </>
+                              
+                    <div
+                        key={message.msgId}
+                        className={
+                            message.senderId === currentUserId ? "message own" : "message"
+                        }
+                    >
+                        <span>{message.text}</span>
+                        <span>
+                            <TimeAgo date={message.createAt} />
+                        </span>
+                    </div>
+                    
                 ))}
             </div>
 

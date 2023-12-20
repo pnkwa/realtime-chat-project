@@ -67,7 +67,7 @@ io.on("connection", (socket: Socket) => {
 			senderId: string;
 			text: string;
 		};
-		
+
 		const user = activeUsers.find((user) => user.userId == receiverId);
 
 		console.log("Sending from socket to : ", receiverId);
@@ -79,7 +79,8 @@ io.on("connection", (socket: Socket) => {
 			io.to(user.socketId).emit("receive-message", {
 				chatId,
 				senderId,
-				text
+				text,
+				createAt: new Date().toISOString(),
 			});
 		}
 	});
