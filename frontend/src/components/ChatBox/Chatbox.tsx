@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getUser } from "../../api/UserRequests";
 import { addMessages, getMassages } from "../../api/MessageRequets";
 import InputEmoji from "react-input-emoji";
@@ -36,6 +36,7 @@ interface UserData {
   profileImage: string;
 }
 
+
 const ChatBox: React.FC<ChatBoxProps> = ({
     chat,
     currentUserId,
@@ -45,6 +46,16 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     const [userData, setUserData] = useState<UserData | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
+
+    const chatBodyRef = useRef<HTMLDivElement>(null);
+    
+    // Always scroll to the last message
+    useEffect(() => {
+        
+        if (chatBodyRef.current) {
+            chatBodyRef.current.scrollIntoView({behavior: "smooth"});
+        }
+    }, [messages]);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -139,23 +150,21 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 </div>
             </div>
             <hr />
-            <div className="chat-body">
+            <div className="chat-body" ref={chatBodyRef}>
                 {messages.map((message) => (
-                              
                     <div
                         key={message.msgId}
-                        className={
-                            message.senderId === currentUserId ? "message own" : "message"
-                        }
+                        ref={chatBodyRef}
+                        className={message.senderId === currentUserId ? "message own" : "message"}
                     >
                         <span>{message.text}</span>
                         <span>
                             <TimeAgo date={message.createAt} />
                         </span>
                     </div>
-                    
                 ))}
             </div>
+
 
             <div className="chat-sender">
                 <div>+</div>

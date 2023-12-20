@@ -10,9 +10,10 @@ interface ConversationProps {
         members: string[];
     };
     currentUserId: string;
+    online: boolean;
 }
 
-const Conversations: React.FC<ConversationProps> = ({ data, currentUserId }) => {
+const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, online }) => {
     const [userData, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
@@ -48,7 +49,7 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId }) => 
     return (
         <>
             <div className="follower conversation">
-                <div className="online-dot"></div>
+                {online && <div className="online-dot"/>}
                 <img 
                     src={"http://localhost:5001/Images/" + userData?.profileImage }
                     alt="profile" 
@@ -57,7 +58,7 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId }) => 
                 />
                 <div className="name" style={{fontSize: "0.8rem"}}>
                     <span>{userData?.username}</span>
-                    <span> Online</span>
+                    <span>{online ? " Online": " Offline"}</span>
                 </div>
             </div>
             <hr />

@@ -4,7 +4,7 @@ import { userChats } from "../../api/ChatRequests";
 import Conversations from "../Conversation/Conversation";
 import "../ChatBox/Chatbox.css";
 import ChatBox from "../ChatBox/Chatbox";
-import { io, Socket } from "socket.io-client"; // Import Socket type from socket.io-client
+import { io, Socket } from "socket.io-client"; 
 
 export default function Login() {
   interface User {
@@ -138,6 +138,12 @@ export default function Login() {
       };
   }, [socket]);
 
+  const checkOnlineUsers = (chat: { members: string[], chatId: string }) => {
+      const chatMember = chat.members.find((member) => member != user?.userId);
+      const online = onlineUsers?.some((user) => user.userId == chatMember);
+      return online ? true : false;
+  };
+  
 
 
   return (
@@ -168,6 +174,7 @@ export default function Login() {
                             <Conversations
                                 data={chatItem}
                                 currentUserId={user?.userId || ""}
+                                online = {checkOnlineUsers(chatItem)}
                             ></Conversations>
                         </div>
                     ))}
