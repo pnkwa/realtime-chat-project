@@ -48,6 +48,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     const [newMessage, setNewMessage] = useState("");
 
     const chatBodyRef = useRef<HTMLDivElement>(null);
+
     
     // Always scroll to the last message
     useEffect(() => {
@@ -134,6 +135,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         return <div>Tap on a Chat to start Conversation</div>;
     }
 
+    const isYouTubeLink = (text: string): boolean => {
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    
+        return youtubeRegex.test(text);
+    };
+
+    const getYouTubeVideoId = (text: string): string | null => {
+        const match = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      
+        return match ? match[1] : null;
+    };
     return (
         <div className="ChatBox-container">
             <div className="chat-header">
@@ -157,7 +169,32 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         ref={chatBodyRef}
                         className={message.senderId === currentUserId ? "message own" : "message"}
                     >
-                        <span>{message.text}</span>
+                        {isYouTubeLink(message.text) ? (
+                            <>
+                                <iframe
+                                    width="384"
+                                    height="216"
+                                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(message.text)}`}
+                                    title="YouTube video player"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+
+                                {/* Audio element for YouTube video audio */}
+                                <audio controls>
+                                    <source
+                                        src="https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"
+                                        type="audio/mp3"
+                                    />
+      Your browser does not support the audio element.
+                                </audio>
+
+                            </>
+                        ) : (
+                            <>
+                                <span>{message.text}</span>
+                            </>
+                        )}
                         <span>
                             <TimeAgo date={message.createAt} />
                         </span>
