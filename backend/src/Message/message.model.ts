@@ -17,4 +17,7 @@ export class Message {
 
     @Column()
     	senderId: number;
+
+    @Column({ nullable: true })
+    	Key_video: string;
 }

@@ -161,23 +161,26 @@ export default function Login() {
 
                   <div className="Chat">
                       {/* Left side */}
+                      
                       <div className="Left-side-chat">
                           <div className="Chat-container">
+                                
                               <h2>Chats</h2>
+                              <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs" />
                               <div className="Chat-List">
                                   {Array.isArray(chat) &&
-                    chat.map((chatItem) => (
-                        <div
-                            key={chatItem.members.join("_")}
-                            onClick={() => setCurrentChat(chatItem)}
-                        >
-                            <Conversations
-                                data={chatItem}
-                                currentUserId={user?.userId || ""}
-                                online = {checkOnlineUsers(chatItem)}
-                            ></Conversations>
-                        </div>
-                    ))}
+                                    chat.map((chatItem) => (
+                                        <div
+                                            key={chatItem.members.join("_")}
+                                            onClick={() => setCurrentChat(chatItem)}
+                                        >
+                                            <Conversations
+                                                data={chatItem}
+                                                currentUserId={user?.userId || ""}
+                                                online = {checkOnlineUsers(chatItem)}
+                                            ></Conversations>
+                                        </div>
+                                    ))}
                               </div>
                           </div>
 

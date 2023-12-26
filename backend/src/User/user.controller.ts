@@ -44,7 +44,7 @@ router.post("/user/myprofile", uploadfile.single("file"), async (req:Request, re
 	createUser(req, res);
 });
 
-//update
+//update 
 router.put("/user/myprofile/:id", async (req:Request, res:Response) => {
 	updateUser(req, res);
 });

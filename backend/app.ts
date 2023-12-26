@@ -3,6 +3,7 @@ import express from "express";
 import userRoutes from "./src/User/user.controller";
 import chatRoutes from "./src/Chat/chat.controller";
 import msgRoutes from "./src/Message/message.controller";
+import voiceMsgRoutes from "./src/Voice-messege/voice-message.controller";
 import { AppDataSource } from "./src/config/data-source";
 import cors from "cors";
 import { Server } from "http";
@@ -31,6 +32,7 @@ AppDataSource.initialize()
 app.use("/", userRoutes);
 app.use("/", chatRoutes);
 app.use("/", msgRoutes);
+app.use("/", voiceMsgRoutes);
 
 const port = 5001;
 const server = httpServer.listen(port, () => {

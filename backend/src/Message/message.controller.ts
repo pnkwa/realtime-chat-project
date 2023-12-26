@@ -23,7 +23,7 @@ router.post("/message",async (req:Request, res:Response) => {
 	}    
 });
 
-// get message
+// get message by chat id
 router.get("/message/:chatId",async (req:Request, res:Response) => {
 	const chatId:string = req.params.chatId;
 
@@ -37,6 +37,31 @@ router.get("/message/:chatId",async (req:Request, res:Response) => {
 	}catch(error){
 		console.error(error);
 		res.status(500).json(error);
+	}
+});
+
+
+//get all message 
+router.get("/message",async (req:Request, res:Response) => {
+	const word:string = req.query.word as string;
+	try{
+		let result = await msgRespository.find({
+			select: {
+				msgId: true,
+				chatId: true,
+				senderId: true,
+				text: true,
+				createAt: true,
+			}
+		});
+
+		if (word) {
+			result = result.filter((msg) => msg.text.toLowerCase().includes(word.toLowerCase()));
+		}
+
+		res.json(result);
+	}catch(error){
+		console.log(error);
 	}
 });
 
