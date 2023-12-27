@@ -28,6 +28,8 @@
    },
    "dependencies": {
       "@aws-sdk/client-s3": "^3.478.0",
+      "@aws-sdk/lib-storage": "^3.481.0",
+      "@aws-sdk/s3-request-presigner": "^3.481.0",
       "@types/fluent-ffmpeg": "^2.1.24",
       "body-parser": "^1.20.2",
       "cors": "^2.8.5",
