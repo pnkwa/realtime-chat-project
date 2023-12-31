@@ -14,6 +14,6 @@ export class User {
     @Column()
   	    password: string;
 
-    @Column({ nullable: true }) // Assuming profileImage is optional
+    @Column({ nullable: true }) 
   	    profileImage: string;
 }

@@ -9,11 +9,15 @@ const msgRespository = AppDataSource.getRepository(Message);
 //add message
 router.post("/message",async (req:Request, res:Response) => {
 	try{
-		const { chatId, senderId, text } = req.body;
+		const { chatId, senderId, text, key_video } = req.body;
 		const msg = new Message();
 		msg.chatId = chatId;
 		msg.senderId = senderId;
 		msg.text = text;
+
+		if ( key_video !== null){
+			msg.key_video = key_video;
+		}
 
 		await msgRespository.save(msg);
 		res.status(200).json(msg);
@@ -52,6 +56,7 @@ router.get("/message",async (req:Request, res:Response) => {
 				senderId: true,
 				text: true,
 				createAt: true,
+				key_video: true
 			}
 		});
 

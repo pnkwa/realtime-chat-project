@@ -30,6 +30,7 @@ export default function Login() {
     text: string;
     createAt: string;
     chatId: string;
+    key_video: string;
   }
   
   interface OnlineUser {
