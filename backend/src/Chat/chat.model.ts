@@ -9,4 +9,6 @@ export class Chat {
     	members: string[];
     @CreateDateColumn({type: "timestamp"})
     	timestamps: Date;
-}
+    @Column({ nullable: true })
+    	groupName?: string;
+}   

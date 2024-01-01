@@ -10,10 +10,28 @@ const chatRepository = AppDataSource.getRepository(Chat);
 //create chat
 router.post("/chat", async (req: Request, res: Response) => {
 	try {
+
 		const { senderId, receiverId } = req.body;
 
 		const chat = new Chat();
 		chat.members = [senderId, receiverId];
+		
+
+		await chatRepository.save(chat);
+		res.status(200).json(chat);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(error);
+	}
+});
+
+router.post("/chat-group", async (req:Request, res:Response) => {
+	try {
+		const { members, groupName } = req.body;
+
+		const chat = new Chat();
+		chat.members = members;
+		chat.groupName = groupName;
 
 		await chatRepository.save(chat);
 		res.status(200).json(chat);

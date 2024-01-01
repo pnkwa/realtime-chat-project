@@ -63,11 +63,12 @@ io.on("connection", (socket: Socket) => {
 
 	// Send message
 	socket.on("send-message", (data) => {
-		const { receiverId, chatId, senderId, text } = data as {
+		const { receiverId, chatId, senderId, text, key_video } = data as {
 			receiverId: string;
 			chatId: string;
 			senderId: string;
 			text: string;
+			key_video: string | null;
 		};
 
 		const user = activeUsers.find((user) => user.userId == receiverId);
@@ -83,6 +84,7 @@ io.on("connection", (socket: Socket) => {
 				senderId,
 				text,
 				createAt: new Date().toISOString(),
+				key_video
 			});
 		}
 	});

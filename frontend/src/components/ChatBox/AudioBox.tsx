@@ -13,7 +13,7 @@ const AudioBox: React.FC<AudioBoxProps> = ({ audioKey }: AudioBoxProps) => {
             if (audioKey) {
                 const data = await getAudioUrl(audioKey);
                 setAudioUrl(data);
-                console.log("audio url box : ", data);
+                // console.log("audio url box : ", data);
             }
         } catch (error) {
             console.error("Error fetching audio:", error);
@@ -21,10 +21,7 @@ const AudioBox: React.FC<AudioBoxProps> = ({ audioKey }: AudioBoxProps) => {
     };
 
     fetchObjectAudio();
-  
-    // useEffect(() => {
-        
-    // }, []);
+
   
     return (
         <>

@@ -22,6 +22,7 @@ export default function Login() {
     chatId: string;
     senderId: string;
     text: string;
+    key_video: string | null;
   }
 
   interface ReceivedMessage {

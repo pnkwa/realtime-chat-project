@@ -105,7 +105,7 @@ const uploadToS3 = async (audioFilePath, key) => {
 router.get("/youtube-url/:key", async (req: Request, res: Response) => {
 
 	const key: string = req.params.key;
-	console.log(key);
+	// console.log(key);
 
 	try{
 		const result = await msgRespository.findOne({

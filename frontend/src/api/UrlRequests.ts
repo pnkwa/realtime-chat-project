@@ -8,7 +8,7 @@ export const addUrl = async (link: string): Promise<string> => {
 };
 
 export const getAudioUrl = async (key: string): Promise<string> => {
-    console.log("key url", key);
+    // console.log("key url", key);
     const reqsponse = await API.get(`/youtube-url/${key}`);
 
     return reqsponse.data;

@@ -23,6 +23,7 @@ interface ChatBoxProps {
       senderId: string;
       text: string;
       receiverId: string;
+      key_video: string | null
     }
   ) => void;
 
@@ -119,19 +120,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
-        // let key = null; //default is null when it is not url yt
-
-        // if (isYouTubeLink(newURl)) {
-        //     try {
-        //         const response = await addUrl(newMessage);
-        //         key = response;
-        //         console.log("get key : " , key);
-        //         setAudioKey(key);
-        //     } catch (error) {
-        //         console.error("Error adding YouTube link:", error);
-        //         return;
-        //     }
-        // }
 
         const message = {
             chatId: chat?.chatId || "",
@@ -186,7 +174,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     const { data } = await addMessages(message);
                     setMessages((prevMessages) => [...prevMessages, data]);
                     setNewMessage("");
-                    setNewUrl("");
                 } catch (error) {
                     console.error("Error sending message:", error);
                 }
