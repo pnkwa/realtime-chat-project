@@ -68,7 +68,7 @@ io.on("connection", (socket: Socket) => {
 			chatId: string;
 			senderId: string;
 			text: string;
-			key_video: string | null;
+			key_video: string;
 		};
 
 		const user = activeUsers.find((user) => user.userId == receiverId);

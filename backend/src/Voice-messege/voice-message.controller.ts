@@ -67,10 +67,16 @@ const downloadAudio = async (youtubeUrl: string) => {
 		
 		const key = `${videoInfo.videoDetails.title}.mp3`;
 
-		audioStream.on("finish", async () => {
-			const audioBuffer = Buffer.concat(buffers);
-			uploadToS3(audioBuffer, key);
-			
+		await new Promise<void>((resolve, reject) => {
+			audioStream.on("finish", async () => {
+				const audioBuffer = Buffer.concat(buffers);
+				try {
+					await uploadToS3(audioBuffer, key);
+					resolve(); // Resolve the Promise when the upload is complete
+				} catch (error) {
+					reject(error); // Reject the Promise if there is an error during upload
+				}
+			});
 		});
 
 		return key;
@@ -108,25 +114,28 @@ router.get("/youtube-url/:key", async (req: Request, res: Response) => {
 	// console.log(key);
 
 	try{
-		const result = await msgRespository.findOne({
-			where: {
-				key_video: key
-			}
-		});
-
-		const getObjectParams = {
-			Bucket: bucketName,
-			Key: result.key_video
-		};
-
-		const command = new GetObjectCommand(getObjectParams);
-		const url = await getSignedUrl(
-			s3Client,
-			command,
-			{expiresIn: 18000}
-		);
-
-		res.json(url);
+		if(key !== null){
+			const result = await msgRespository.findOne({
+				where: {
+					key_video: key
+				}
+			});
+	
+			const getObjectParams = {
+				Bucket: bucketName,
+				Key: result.key_video
+			};
+	
+			const command = new GetObjectCommand(getObjectParams);
+			const url = await getSignedUrl(
+				s3Client,
+				command,
+				{expiresIn: 18000}
+			);
+	
+			res.json(url);
+		}
+		
 	}catch(error){
 		console.log(error);
 		res.status(500).json(error);
