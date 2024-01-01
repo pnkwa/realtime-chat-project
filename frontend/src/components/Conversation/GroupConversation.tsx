@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { getUser } from "../../api/UserRequests";
-import GroupConversations from "./GroupConversation";
-
 interface UserData {
-  username: string;
-  profileImage: string;
+    username: string;
+    profileImage: string;
 }
 
 interface ConversationProps {
-  data: {
-    groupName: string;
-    members: string[];
-  };
-  currentUserId: string;
-  online: boolean;
+    data: {
+        groupName: string | null;
+        members: string[];
+    };
+    currentUserId: string;
 }
 
-const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, online }) => {
-    const [userData, setUserData] = useState<UserData | null>(null);
+const GroupConversations: React.FC<ConversationProps> = ({ data, currentUserId }) => {
+    const [, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
+
         const id = data.members.find((id) => String(id) !== String(currentUserId));
         console.log("data: ", data);
         const getUserData = async () => {
@@ -34,22 +32,10 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
                 console.error("Error fetching user data:", error);
             }
         };
-
+    
         getUserData();
+        
     }, [data, currentUserId]);
-
-    // Check if it's a group conversation
-    if (data.members.length > 2) {
-        return (
-            <GroupConversations
-                data={{
-                    groupName: data.groupName,
-                    members: data.members
-                }}
-                currentUserId={currentUserId}
-            />
-        );
-    }
     
     // const defaultProfileImage = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
     // const profileImage =
@@ -63,16 +49,16 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
     return (
         <>
             <div className="follower conversation">
-                {online && <div className="online-dot"/>}
-                <img 
+                {/* {online && <div className="online-dot"/>} */}
+                {/* <img 
                     src={"http://localhost:5001/Images/" + userData?.profileImage }
                     alt="profile" 
                     className="followerImage"
                     style={{width: "70px"}}
-                />
+                /> */}
                 <div className="name" style={{fontSize: "0.8rem"}}>
-                    <span>{userData?.username}</span>
-                    <span>{online ? " Online": " Offline"}</span>
+                    <span>{data.groupName}</span>
+                    {/* <span>{online ? " Online": " Offline"}</span> */}
                 </div>
             </div>
             <hr />
@@ -80,4 +66,4 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
     );
 };
 
-export default Conversations;
+export default GroupConversations;

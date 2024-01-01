@@ -4,7 +4,7 @@ import userRoutes from "./src/User/user.controller";
 import chatRoutes from "./src/Chat/chat.controller";
 import msgRoutes from "./src/Message/message.controller";
 import voiceMsgRoutes from "./src/Voice-messege/voice-message.controller";
-import { AppDataSource } from "./src/config/data-source";
+import { AppDataSource } from "./config/data-source";
 import cors from "cors";
 import { Server } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
@@ -63,30 +63,31 @@ io.on("connection", (socket: Socket) => {
 
 	// Send message
 	socket.on("send-message", (data) => {
-		const { receiverId, chatId, senderId, text, key_video } = data as {
-			receiverId: string;
+		const { receiverIds, chatId, senderId, text, key_video } = data as {
+			receiverIds: string[]; // Change to an array of receiver IDs
 			chatId: string;
 			senderId: string;
 			text: string;
 			key_video: string;
 		};
 
-		const user = activeUsers.find((user) => user.userId == receiverId);
+		receiverIds.forEach((receiverId) => {
+			const user = activeUsers.find((user) => user.userId == receiverId);
 
-		console.log("Sending from socket to : ", receiverId);
-		console.log("Data ", { chatId, senderId, text });
-		console.log("Socket user ", user);
+			console.log("Sending from socket to : ", receiverId);
+			console.log("Data ", { chatId, senderId, text });
+			console.log("Socket user ", user);
 
-		if (user) {
-			console.log("start receive msg!!");
-			io.to(user.socketId).emit("receive-message", {
-				chatId,
-				senderId,
-				text,
-				createAt: new Date().toISOString(),
-				key_video
-			});
-		}
+			if (user && senderId !== receiverId) {
+				io.to(user.socketId).emit("receive-message", {
+					chatId,
+					senderId,
+					text,
+					createAt: new Date().toISOString(),
+					key_video
+				});
+			}
+		});
 	});
 
 	socket.on("receive-message", (data) => {

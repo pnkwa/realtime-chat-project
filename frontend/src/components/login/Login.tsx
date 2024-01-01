@@ -16,6 +16,7 @@ export default function Login() {
   interface Chat {
     chatId: string;
     members: string[];
+    groupName: string;
   }
 
   interface Message {
@@ -23,6 +24,7 @@ export default function Login() {
     senderId: string;
     text: string;
     key_video: string | null;
+    receiverIds: string[];
   }
 
   interface ReceivedMessage {

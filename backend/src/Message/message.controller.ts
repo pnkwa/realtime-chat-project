@@ -1,7 +1,7 @@
 import express , {Request, Response}from "express";
 const router = express.Router();
 
-import { AppDataSource } from "../config/data-source";
+import { AppDataSource } from "../../config/data-source";
 import { Message } from "./message.model";
 
 const msgRespository = AppDataSource.getRepository(Message);

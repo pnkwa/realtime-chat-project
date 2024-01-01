@@ -22,7 +22,7 @@ interface ChatBoxProps {
       chatId: string;
       senderId: string;
       text: string;
-      receiverId: string;
+      receiverIds: string[];
       key_video: string | null
     }
   ) => void;
@@ -67,6 +67,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         }
     }, [messages]);
 
+
     useEffect(() => {
         const getUserData = async () => {
             try {
@@ -78,6 +79,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         setUserData(userData);
                     }
                 }
+                
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -129,9 +131,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         };
 
         try {
-            const receiverId = chat?.members.find((id) => id != currentUserId);
-            if (receiverId) {
-                setSendMessage({ ...message, receiverId });
+            const receiverIds = chat?.members.filter((id) => id != currentUserId) || [];
+            if (receiverIds.length > 0) {
+                setSendMessage({ ...message, receiverIds });
             }
 
             const { data } = await addMessages(message);
@@ -166,9 +168,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 };
         
                 try {
-                    const receiverId = chat?.members.find((id) => id != currentUserId);
-                    if (receiverId) {
-                        setSendMessage({ ...message, receiverId });
+                    const receiverIds = chat?.members.filter((id) => id !== currentUserId) || [];
+                    if (receiverIds.length > 0) {
+                        setSendMessage({ ...message, receiverIds });
                     }
         
                     const { data } = await addMessages(message);

@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "../User/user.model";
-import { Chat } from "../Chat/chat.model";
-import { Message } from "../Message/message.model";
+import { User } from "../src/User/user.model";
+import { Chat } from "../src/Chat/chat.model";
+import { Message } from "../src/Message/message.model";
 
 export const AppDataSource = new DataSource({
 	type: "postgres",
