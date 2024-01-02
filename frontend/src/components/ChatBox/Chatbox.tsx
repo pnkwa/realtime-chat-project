@@ -59,6 +59,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     const [audioKey, setAudioKey] = useState("");
     const chatBodyRef = useRef<HTMLDivElement>(null);
     const [userGroupData, setUserGroupData] = useState<UserData[]>([]);
+
+    console.log("receivedMessages ", receivedMessages);
     
     // Always scroll to the last message
     useEffect(() => {
@@ -124,14 +126,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     useEffect(() => {
         if (receivedMessages && typeof receivedMessages === "object" && !Array.isArray(receivedMessages)) {
             // Convert the object into an array
-            const receivedMessagesArray = [receivedMessages];
+            const receivedMessagesArray: Message[] = [receivedMessages];
     
-            // Update the messages state with the received messages array
-            setMessages((prevMessages) => [...prevMessages, ...receivedMessagesArray]);
-        
+            // Update the messages state only if the received message belongs to the current chat
+            if (receivedMessagesArray[0]?.chatId == chat?.chatId) {
+                setMessages((prevMessages) => [...prevMessages, ...receivedMessagesArray]);
+            }
         }
     }, [receivedMessages, chat]);
-    
     
 
     const handleChange = (newMessage: string) => {

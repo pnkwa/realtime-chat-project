@@ -64,7 +64,7 @@ io.on("connection", (socket: Socket) => {
 	// Send message
 	socket.on("send-message", (data) => {
 		const { receiverIds, chatId, senderId, text, key_video } = data as {
-			receiverIds: string[]; // Change to an array of receiver IDs
+			receiverIds: string[]; 
 			chatId: string;
 			senderId: string;
 			text: string;
@@ -78,7 +78,7 @@ io.on("connection", (socket: Socket) => {
 			console.log("Data ", { chatId, senderId, text });
 			console.log("Socket user ", user);
 
-			if (user && senderId !== receiverId) {
+			if (user && senderId != receiverId) {
 				io.to(user.socketId).emit("receive-message", {
 					chatId,
 					senderId,

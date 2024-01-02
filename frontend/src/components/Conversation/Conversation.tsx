@@ -20,7 +20,7 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
     const [userData, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
-        const id = data.members.find((id) => String(id) !== String(currentUserId));
+        const id = data.members.find((id) => String(id) != String(currentUserId));
         console.log("data: ", data);
         const getUserData = async () => {
             try {
@@ -51,15 +51,7 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
         );
     }
     
-    // const defaultProfileImage = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
-    // const profileImage =
-    //     userData && userData.profileImage
-    //         ? `${process.env.REACT_APP_PUBLIC_FOLDER}${userData.profileImage}`
-    //         : defaultProfileImage;
-
-    // console.log("First Image URL:", profileImage);
-    // console.log("Second Image URL:", `http://localhost:5001/Images/${userData?.profileImage}`);
-    // console.log(process.env);
+    
     return (
         <>
             <div className="follower conversation">
