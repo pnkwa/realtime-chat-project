@@ -40,8 +40,9 @@ interface Message {
 }
 
 interface UserData {
-  username: string;
-  profileImage: string;
+    userId: string;
+    username: string;
+    profileImage: string;
 }
 
 
@@ -57,7 +58,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     const [newURl, setNewUrl] = useState("");
     const [audioKey, setAudioKey] = useState("");
     const chatBodyRef = useRef<HTMLDivElement>(null);
-
+    const [userGroupData, setUserGroupData] = useState<UserData[]>([]);
     
     // Always scroll to the last message
     useEffect(() => {
@@ -72,12 +73,29 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         const getUserData = async () => {
             try {
                 if (chat?.members) {
-                    const userId = chat.members.find((id) => id != currentUserId);
-                    if (userId) {
-                        const response = await getUser(userId);
-                        const userData: UserData = await response.data;
-                        setUserData(userData);
+                    if(chat?.members.length === 2){
+                        const userId = chat.members.find((id) => id != currentUserId);
+                        if (userId) {
+                            const response = await getUser(userId);
+                            const userData: UserData = await response.data;
+                            setUserData(userData);
+                        }
                     }
+
+                    else if (chat.members.length > 2) {
+                        const receiverIds = chat.members.filter(
+                            (id) => id != currentUserId
+                        );
+                        const groupData = await Promise.all(
+                            receiverIds.map(async (id) => {
+                                const response = await getUser(id);
+                                return response.data;
+                            })
+                        );
+                        setUserGroupData(groupData);
+                        console.log("userGroupData : ", userGroupData);
+                    }
+                    
                 }
                 
             } catch (error) {
@@ -150,7 +168,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         setNewUrl(newUrl);
     };
 
-    const handleUrlSend =async (e: React.FormEvent) => {
+    const handleUrlSend = async (e: React.FormEvent) => {
         e.preventDefault();
         
         if (isYouTubeLink(newURl)) {
@@ -168,7 +186,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 };
         
                 try {
-                    const receiverIds = chat?.members.filter((id) => id !== currentUserId) || [];
+                    const receiverIds = chat?.members.filter((id) => id != currentUserId) || [];
                     if (receiverIds.length > 0) {
                         setSendMessage({ ...message, receiverIds });
                     }
@@ -224,7 +242,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         key={message.msgId}
                         ref={chatBodyRef}
                         className={message.senderId === currentUserId ? "message own" : "message"}
-                    >
+                    >   
+                        
                         {isYouTubeLink(message.text) ? (
                             <>
                                 <span>{message.text}</span>
@@ -240,11 +259,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                             </>
                         ) : (
                             <>
-                                <span>{message.text}</span>
+                                {chat.members.length === 2 && message.senderId !== currentUserId ? (
+                                    <h3>username: {userData?.username}</h3>
+                                ) : (
+                                    <>
+                                        {chat.members.length > 2 && message.senderId !== currentUserId ? (
+                                            <h3>
+                                                {userGroupData
+                                                    .filter(user => user.userId === message.senderId)
+                                                    .map(user => (
+                                                        <span key={user.userId}>{user.username} </span>
+                                                    ))}
+                                            </h3>
+                                        ) : null}
+                                    </>
+                                )}
 
                                 {message.key_video && (
                                     <AudioBox audioKey={message.key_video}></AudioBox>
                                 )}
+                                <h1>{message.text}</h1>
+                               
                             </>
                         )}
                         <span>

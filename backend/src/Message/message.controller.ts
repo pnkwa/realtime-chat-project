@@ -57,6 +57,9 @@ router.get("/message",async (req:Request, res:Response) => {
 				text: true,
 				createAt: true,
 				key_video: true
+			},
+			order: {
+				createAt: "ASC",
 			}
 		});
 
