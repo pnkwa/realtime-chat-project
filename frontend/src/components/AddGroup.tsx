@@ -1,12 +1,12 @@
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { getAllUsersExceptCurrent } from "../api/UserRequests";
-import { createChat, findChats } from "../api/ChatRequests";
+import { findChats } from "../api/ChatRequests";
 
-interface SearchFriendsProps {
+interface AddGroupProps {
   currentUserId: string;
 }
 
@@ -16,7 +16,7 @@ interface SearchResultsProps {
   username: string;
 }
 
-const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
+const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultsProps[]>([]);
     const [userInChat, setUserInChat] = useState<boolean[]>([]);
@@ -43,23 +43,23 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
         handleSearch(query);
     };
 
-    const handleAddUser = (userId: string) => {
-        console.log("Add user with userId:", userId);
+    // const handleAddUser = (userId: string) => {
+    //     console.log("Add user with userId:", userId);
 
-        const data = {
-            senderId: currentUserId,
-            receiverId: userId,
-        };
+    //     const data = {
+    //         senderId: currentUserId,
+    //         receiverId: userId,
+    //     };
         
-        createChat(data)
-            .then((response) => {
-                console.log("Chat created successfully:", response.data);
-                // window.location.reload();
-            })
-            .catch((error) => {
-                console.error("Error creating chat:", error);
-            });
-    };
+    //     createChat(data)
+    //         .then((response) => {
+    //             console.log("Chat created successfully:", response.data);
+    //             // window.location.reload();
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error creating chat:", error);
+    //         });
+    // };
 
     useEffect(() => {
         const fetchUserChatStatus = async () => {
@@ -85,8 +85,9 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
     return (
         <>
             <div>
+                
                 <Popup
-                    trigger={<FontAwesomeIcon icon={faUserPlus} />}
+                    trigger={<FontAwesomeIcon icon={faSquarePlus} />}
                     modal
                     nested
                     contentStyle={{
@@ -113,15 +114,17 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
                         >
                             {searchResults.map((user, index) => (
                                 <div key={user.userId} className="flex items-center mb-2">
-                                    <img src={"http://localhost:5001/Images/" + user.profileImage} alt="" className="w-12 h-12 rounded-full mr-2" />
-                                    <h1 className="text-lg font-semibold">{user.username}</h1>
-                                    {!userInChat[index] && (
-                                        <button
-                                            className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
-                                            onClick={() => handleAddUser(user.userId)}
-                                        >
-                                            <FontAwesomeIcon icon={faUserPlus} /> Add
-                                        </button>
+                                    
+                                    {userInChat[index] && (
+                                        <><img src={"http://localhost:5001/Images/" + user.profileImage} alt="" className="w-12 h-12 rounded-full mr-2" /><h1 className="text-lg font-semibold">{user.username}</h1>
+                                            {/* <button
+                                                className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+                                                onClick={() => handleAddUser(user.userId)}
+                                            >
+                                                <FontAwesomeIcon icon={faUserPlus} /> Add
+                                            </button> */}
+                                            <input type="checkbox" className="checkbox" />
+                                        </>
                                     )}
                                 </div>
                             ))}
@@ -133,4 +136,4 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
     );
 };
 
-export default SearchFriends;
+export default AddGroup;

@@ -6,6 +6,7 @@ import "../ChatBox/Chatbox.css";
 import ChatBox from "../ChatBox/Chatbox";
 import { io, Socket } from "socket.io-client"; 
 import SearchFriends from "../SearchFriends";
+import AddGroup from "../AddGroup";
 
 export default function Login() {
   interface User {
@@ -157,7 +158,7 @@ export default function Login() {
           // If the user is logged in, display profile information
               <div className="profile">
                   <SearchFriends currentUserId={user.userId}/>
-                
+                  <AddGroup currentUserId={user.userId}></AddGroup>
                   <img
                       src={"http://localhost:5001/Images/" + user.profileImage}
                       alt="profile"
