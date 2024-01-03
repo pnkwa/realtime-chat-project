@@ -278,8 +278,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     
   
     return (
-        <div className="ChatBox-container">
-            <div className="chat-header">
+        <div className="ChatBox-container bg-gray-300 rounded-xl w-96">
+            <div className="chat-header p-4 flex flex-col">
                 <div className="follower">
                     <img
                         src={"http://localhost:5001/Images/" + userData?.profileImage}
@@ -311,7 +311,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 </div>
             </div>
             <hr />
-            <div className="chat-body" ref={chatBodyRef}>
+            <div className="chat-body flex flex-col gap-2 p-6 overflow-auto">
                 {messages.map((message) => (
                     <div
                         key={message.msgId}
@@ -368,7 +368,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
             </div>
 
 
-            <div className="chat-sender">
+            <div className="chat-sender bg-white flex justify-between items-center h-16 gap-4 p-4 rounded-xl">
                 <div>
                     <Popup 
                         trigger={<FontAwesomeIcon icon={faHeadphones} />} 

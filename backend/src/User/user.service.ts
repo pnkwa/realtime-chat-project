@@ -1,3 +1,4 @@
+import { Not } from "typeorm";
 import { AppDataSource } from "../../config/data-source";
 import { User } from "./user.model";
 
@@ -137,6 +138,26 @@ export async function login(req, res) {
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal Server Error" });
+	}
+}
+
+export async function getAllUsersExceptCurrent(currentUserId) {
+	try {
+		const users = await userRepository.find({
+			where: {
+				userId: Not(currentUserId), // Use Not method to represent $ne
+			},
+			select: {
+				userId: true,
+				username: true,
+				profileImage: true,
+			},
+		});
+  
+		return users;
+	} catch (error) {
+		console.error(error);
+		throw new Error("Error fetching users");
 	}
 }
 

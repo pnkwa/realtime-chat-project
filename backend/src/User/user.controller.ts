@@ -1,7 +1,8 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import express , {Request, Response}from "express";
 import multer from "multer";
 const router = express.Router();
-import {createUser, deleteUser, getAllUsers, getUserById, login, updateUser} from "./user.service";
+import {createUser, deleteUser, getAllUsers, getAllUsersExceptCurrent, getUserById, login, updateUser} from "./user.service";
 //get all users
 router.get("/user/myprofile", async (req:Request, res:Response) => {
 	getAllUsers(req, res);
@@ -54,5 +55,16 @@ router.delete("/user/myprofile/:id", async (req:Request, res:Response) => {
 	deleteUser(req, res);
 });
 
+router.get("/user/all", async (req: Request, res: Response) => {
+	const { currentUserId } = req.query;
+  
+	try {
+		const users = await getAllUsersExceptCurrent(currentUserId);
+	 	res.json(users);
 
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
 export default router;
