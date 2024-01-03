@@ -63,7 +63,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     // Inside ChatBox component
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<Message[]>([]);
-    
+    const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null);
+    const [isTyping, setIsTyping] = useState(false);
+
     // Always scroll to the last message
     useEffect(() => {
         
@@ -72,6 +74,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         }
     }, [messages]);
 
+    // Reset search term when chat prop changes
+    useEffect(() => {
+        setSearchTerm("");
+        setIsTyping(false);
+    }, [chat]);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -227,6 +234,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     // Inside ChatBox component
     const handleSearch = (term: string) => {
         setSearchTerm(term);
+        setIsTyping(!!term); // Set isTyping to true if there is a search term, false otherwise
+
         const filteredMessages = messages.filter((msg) =>
             msg.text.toLowerCase().includes(term.toLowerCase())
         );
@@ -235,24 +244,37 @@ const ChatBox: React.FC<ChatBoxProps> = ({
   
     const scrollToMessage = (message: Message) => {
         const messageElement = document.querySelector(`.message-${message.msgId}`);
-        
+        setHighlightedMessageId(message.msgId);
+
         if (messageElement) {
+            messageElement.classList.add("highlighted");
+
             if (message.senderId === currentUserId) {
+
                 // If it's your own message, scroll to the message element directly
                 messageElement.scrollIntoView({ behavior: "smooth" });
+                setIsTyping(false);
+                setSearchTerm("");
             } else {
                 // For other users' messages, find the ".own" class and scroll to it
                 const ownMessageElement = messageElement.querySelector(".own");
                 if (ownMessageElement && ownMessageElement.scrollIntoView) {
                     ownMessageElement.scrollIntoView({ behavior: "smooth" });
+                    setIsTyping(false);
+                    setSearchTerm("");
+
                 } else {
                     // If there's no ".own" class or scrollIntoView not supported, scroll to the message element
                     messageElement.scrollIntoView({ behavior: "smooth" });
+                    setIsTyping(false);
+                    setSearchTerm("");
+
+
                 }
             }
         }
     };
-    
+
     
   
     return (
@@ -276,13 +298,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                             value={searchTerm}
                             onChange={(e) => handleSearch(e.target.value)}
                         />
-                        <ul className="search-results">
-                            {searchResults.map((result) => (
-                                <li key={result.msgId} onClick={() => scrollToMessage(result)}>
-                                    {result.text}
-                                </li>
-                            ))}
-                        </ul>
+                        {isTyping && ( // Show search results only when typing
+                            <ul className="search-results">
+                                {searchResults.map((result) => (
+                                    <li key={result.msgId} onClick={() => scrollToMessage(result)}>
+                                        {result.text}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>
@@ -292,7 +316,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     <div
                         key={message.msgId}
                         ref={chatBodyRef}
-                        className={message.senderId === currentUserId ? "message own message-" + message.msgId : "message message-" + message.msgId}
+                        className={`message ${message.senderId === currentUserId 
+                            ? "own" 
+                            : ""
+                        } message-${message.msgId}`}
                     >   
                         
                         {isYouTubeLink(message.text) ? (
