@@ -60,7 +60,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     const chatBodyRef = useRef<HTMLDivElement>(null);
     const [userGroupData, setUserGroupData] = useState<UserData[]>([]);
 
-    console.log("receivedMessages ", receivedMessages);
+    // Inside ChatBox component
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState<Message[]>([]);
     
     // Always scroll to the last message
     useEffect(() => {
@@ -222,6 +224,37 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         return match ? match[1] : null;
     };
 
+    // Inside ChatBox component
+    const handleSearch = (term: string) => {
+        setSearchTerm(term);
+        const filteredMessages = messages.filter((msg) =>
+            msg.text.toLowerCase().includes(term.toLowerCase())
+        );
+        setSearchResults(filteredMessages);
+    };
+  
+    const scrollToMessage = (message: Message) => {
+        const messageElement = document.querySelector(`.message-${message.msgId}`);
+        
+        if (messageElement) {
+            if (message.senderId === currentUserId) {
+                // If it's your own message, scroll to the message element directly
+                messageElement.scrollIntoView({ behavior: "smooth" });
+            } else {
+                // For other users' messages, find the ".own" class and scroll to it
+                const ownMessageElement = messageElement.querySelector(".own");
+                if (ownMessageElement && ownMessageElement.scrollIntoView) {
+                    ownMessageElement.scrollIntoView({ behavior: "smooth" });
+                } else {
+                    // If there's no ".own" class or scrollIntoView not supported, scroll to the message element
+                    messageElement.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+        }
+    };
+    
+    
+  
     return (
         <div className="ChatBox-container">
             <div className="chat-header">
@@ -235,6 +268,22 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     <div className="name" style={{ fontSize: "0.8rem" }}>
                         <span>{userData?.username}</span>
                     </div>
+
+                    <div className="chat-search">
+                        <input
+                            type="text"
+                            placeholder="Search messages"
+                            value={searchTerm}
+                            onChange={(e) => handleSearch(e.target.value)}
+                        />
+                        <ul className="search-results">
+                            {searchResults.map((result) => (
+                                <li key={result.msgId} onClick={() => scrollToMessage(result)}>
+                                    {result.text}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
             <hr />
@@ -243,7 +292,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     <div
                         key={message.msgId}
                         ref={chatBodyRef}
-                        className={message.senderId === currentUserId ? "message own" : "message"}
+                        className={message.senderId === currentUserId ? "message own message-" + message.msgId : "message message-" + message.msgId}
                     >   
                         
                         {isYouTubeLink(message.text) ? (

@@ -87,3 +87,13 @@
     padding: 8px;
     border: 1px solid #ccc;
 }
+
+/* Add to your CSS */
+.selected {
+    background-color: #f0f0f0; /* Change to your desired highlight color */
+}
+
+/* Add this CSS style to your stylesheets */
+.message.highlighted {
+    background-color: #FFFF99; /* Use your desired highlight color */
+}
