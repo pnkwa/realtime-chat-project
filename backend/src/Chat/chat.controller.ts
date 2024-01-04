@@ -41,7 +41,6 @@ router.post("/chat-group", async (req:Request, res:Response) => {
 	}
 });
 
-
 //user chat (get all chats)
 router.get("/chat/:userId", async (req: Request, res: Response) => {
 	try {

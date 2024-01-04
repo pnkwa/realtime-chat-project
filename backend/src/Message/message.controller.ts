@@ -44,7 +44,6 @@ router.get("/message/:chatId",async (req:Request, res:Response) => {
 	}
 });
 
-
 //get all message 
 router.get("/message",async (req:Request, res:Response) => {
 	const word:string = req.query.word as string;

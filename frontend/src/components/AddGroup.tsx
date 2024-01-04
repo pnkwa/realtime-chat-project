@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { getAllUsersExceptCurrent } from "../api/UserRequests";
-import { findChats } from "../api/ChatRequests";
+import { findChats, createChatGroup } from "../api/ChatRequests";
 
 interface AddGroupProps {
   currentUserId: string;
@@ -19,7 +19,10 @@ interface SearchResultsProps {
 const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultsProps[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [groupName, setGroupName] = useState("");
     const [userInChat, setUserInChat] = useState<boolean[]>([]);
+
 
     const handleSearch = async (query: string) => {
         try {
@@ -42,24 +45,49 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
         setSearchQuery(query);
         handleSearch(query);
     };
+    
+    const handleCheckboxChange = (userId: string) => {
+    
+        setSelectedUsers((prevSelectedUsers) => {
+            const updatedSelectedUsers = prevSelectedUsers.includes(userId)
+                ? prevSelectedUsers.filter((id) => id !== userId)
+                : [...prevSelectedUsers, userId];
+    
+            console.log("selectedUsers : " + updatedSelectedUsers);
+    
+            return updatedSelectedUsers;
+        });
+    };
+    
 
-    // const handleAddUser = (userId: string) => {
-    //     console.log("Add user with userId:", userId);
+    const handleCreateGroup = () => {
+        // Check if at least two users are selected
+        if (selectedUsers.length < 2) {
+            alert("Select at least two users to create a group");
+            return;
+        }
 
-    //     const data = {
-    //         senderId: currentUserId,
-    //         receiverId: userId,
-    //     };
-        
-    //     createChat(data)
-    //         .then((response) => {
-    //             console.log("Chat created successfully:", response.data);
-    //             // window.location.reload();
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error creating chat:", error);
-    //         });
-    // };
+        // Check if a group name is entered
+        if (!groupName.trim()) {
+            alert("Enter a group name");
+            return;
+        }
+    
+        // Call the API to create a group
+        const data = {
+            members: [...selectedUsers, currentUserId], // Include the current user in the group
+            groupName: groupName,
+        };
+    
+        createChatGroup(data)
+            .then((response) => {
+                console.log("Group created successfully:", response.data);
+            // Optionally, you can handle additional logic like redirecting or updating UI.
+            })
+            .catch((error) => {
+                console.error("Error creating group:", error);
+            });
+    };
 
     useEffect(() => {
         const fetchUserChatStatus = async () => {
@@ -85,7 +113,6 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
     return (
         <>
             <div>
-                
                 <Popup
                     trigger={<FontAwesomeIcon icon={faSquarePlus} />}
                     modal
@@ -104,7 +131,19 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
                             value={searchQuery}
                             onChange={handleChange}
                         />
-
+                        <input
+                            type="text"
+                            placeholder="Group name"
+                            className="input input-bordered w-full max-w-xs mb-4 p-2 sticky top-2"
+                            value={groupName}
+                            onChange={(e) => setGroupName(e.target.value)}
+                        />
+                        <button
+                            className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+                            onClick={handleCreateGroup}
+                        >
+              Create group
+                        </button>
                         <div
                             className="search-results-container"
                             style={{
@@ -114,18 +153,24 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
                         >
                             {searchResults.map((user, index) => (
                                 <div key={user.userId} className="flex items-center mb-2">
-                                    
                                     {userInChat[index] && (
-                                        <><img src={"http://localhost:5001/Images/" + user.profileImage} alt="" className="w-12 h-12 rounded-full mr-2" /><h1 className="text-lg font-semibold">{user.username}</h1>
-                                            {/* <button
-                                                className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
-                                                onClick={() => handleAddUser(user.userId)}
-                                            >
-                                                <FontAwesomeIcon icon={faUserPlus} /> Add
-                                            </button> */}
-                                            <input type="checkbox" className="checkbox" />
+
+                                        <>
+                                            <img
+                                                src={"http://localhost:5001/Images/" + user.profileImage}
+                                                alt=""
+                                                className="w-12 h-12 rounded-full mr-2"
+                                            />
+                                            <h1 className="text-lg font-semibold">{user.username}</h1>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedUsers.includes(user.userId)}
+                                                className="checkbox"
+                                                onChange={() => handleCheckboxChange(user.userId)}
+                                            />
                                         </>
                                     )}
+                                    
                                 </div>
                             ))}
                         </div>
