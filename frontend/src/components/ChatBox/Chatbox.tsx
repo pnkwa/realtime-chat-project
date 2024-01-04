@@ -5,7 +5,7 @@ import { addMessages, getMassages } from "../../api/MessageRequets";
 import InputEmoji from "react-input-emoji";
 import TimeAgo from "react-timeago";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeadphones } from "@fortawesome/free-solid-svg-icons";
+import { faHeadphones, faMagnifyingGlass, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { addUrl } from "../../api/UrlRequests";
@@ -277,41 +277,62 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
     
   
-    return (
-        <div className="ChatBox-container bg-gray-300 rounded-xl w-96">
-            <div className="chat-header p-4 flex flex-col">
-                <div className="follower">
-                    <img
-                        src={"http://localhost:5001/Images/" + userData?.profileImage}
-                        alt="profile"
-                        className="followerImage"
-                        style={{ width: "70px" }}
-                    />
-                    <div className="name" style={{ fontSize: "0.8rem" }}>
-                        <span>{userData?.username}</span>
-                    </div>
+    // function handleOnEnter(text: string): void {
+    //     handleSend();
+    // }
 
-                    <div className="chat-search">
+    return (
+        <div className="ChatBox-container bg-white rounded-[30px] border-2 border-black w-full h-full">
+            <div className="chat-header flex flex-row h-[10%] items-center px-4">
+                <img
+                    src={"http://localhost:5001/Images/" + userData?.profileImage}
+                    alt="profile"
+                    className="followerImage object-cover rounded-full w-12 h-12 border-2 border-black"
+                />
+                <div className="name ml-4 text-lg font-bold">
+                    <span>{userData?.username}</span>
+                </div>
+                <div className="chat-search ml-auto">
+                    <div className="flex items-center">
                         <input
                             type="text"
                             placeholder="Search messages"
                             value={searchTerm}
                             onChange={(e) => handleSearch(e.target.value)}
+                            className="bg-yellow border-2 border-black rounded-full py-1 px-2"
                         />
-                        {isTyping && ( // Show search results only when typing
-                            <ul className="search-results">
-                                {searchResults.map((result) => (
-                                    <li key={result.msgId} onClick={() => scrollToMessage(result)}>
-                                        {result.text}
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className="m-1 size-5"/>
+                    </div>
+                    
+                    {isTyping && (
+                    // Show search results only when typing
+                        <ul className="search-results absolute bg-yellow border-2 border-black mt-1 w-[200px] z-10 rounded-xl">
+                            {searchResults
+                                .filter((result) =>
+                                    result.text.toLowerCase().includes(searchTerm.toLowerCase())
+                                )
+                                .map((result) => (
+                                    <li
+                                        key={result.msgId}
+                                        onClick={() => scrollToMessage(result)}
+                                        className="px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-xl"
+                                    >
+                                        {result.senderId === userData?.userId && (
+                                            <h1 className="text-xl font-bold">{userData.username}</h1>
+                                        )}
+
+                                        {result.senderId === currentUserId && (
+                                            <h1 className="text-xl font-bold">you</h1>
+                                        )}
+                                        <p className="text-base">{result.text}</p>
                                     </li>
                                 ))}
-                            </ul>
-                        )}
-                    </div>
+                        </ul>
+                    )}
                 </div>
             </div>
             <hr />
-            <div className="chat-body flex flex-col gap-2 p-6 overflow-auto">
+            <div className="chat-body flex flex-col gap-2 p-6 overflow-auto h-[80%]">
                 {messages.map((message) => (
                     <div
                         key={message.msgId}
@@ -368,7 +389,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
             </div>
 
 
-            <div className="chat-sender bg-white flex justify-between items-center h-16 gap-4 p-4 rounded-xl">
+            <div className="chat-sender flex justify-between items-center h-16 p-4 h-[10%] ">
                 <div>
                     <Popup 
                         trigger={<FontAwesomeIcon icon={faHeadphones} />} 
@@ -401,11 +422,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     
 
                 </div>
-                <div style={{ width: "900px" }}>
-                    <InputEmoji value={newMessage} onChange={handleChange} />
+                <div className="w-full">                    
+                    <InputEmoji 
+                        value={newMessage} 
+                        onChange={handleChange}
+                        borderColor="white"
+                        inputClass="bg-yellow border-2 rounded-full border-black"
+                    />
+                    <FontAwesomeIcon icon={["far", "coffee"]} />
                 </div>
                 <div className="send-button button" onClick={handleSend}>
-          Send
+                    <FontAwesomeIcon icon={faPaperPlane} />                
                 </div>
                 
 
