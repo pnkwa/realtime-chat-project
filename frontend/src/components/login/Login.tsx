@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../ChatBox/Chatbox.css";
 // import Chat from "../../page/Chat/Chat";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   interface User {
@@ -10,13 +10,6 @@ export default function Login() {
     username: string;
     profileImage: string;
   }
-
-  //   interface Chat {
-  //     chatId: string;
-  //     members: string[];
-  //     groupName: string;
-  //   }
-
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,21 +46,46 @@ export default function Login() {
               null
           ) : (
           // If the user is not logged in, display the login form
-              <div className="input-login">
-                  <input
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="Username"
-                  />
-                  <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Password"
-                  />
-                  <button onClick={handleLogin} >Login</button>
-              </div>
+              <>    
+                  <div className="flex flex-col gap-y-2 justify-center items-center h-screen bg-cream">
+                      <div className="w-192 p-16 bg-green rounded-md border-2 border-black">
+                          <h2 className="text-2xl font-bold mb-4 text-black">Login</h2>
+                          <input
+                              type="text"
+                              value={username}
+                              onChange={(e) => setUsername(e.target.value)}
+                              placeholder="Username"
+                              className="w-full px-4 py-2 mb-4 rounded-md border-2 border-black focus:outline-none focus:border-yellow"
+                          />
+                          <input
+                              type="password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              placeholder="Password"
+                              className="w-full px-4 py-2 mb-4 rounded-md border-2 border-black focus:outline-none focus:border-yellow"
+                          />
+                         
+                          <button
+                              onClick={handleLogin}
+                              className="w-full bg-yellow text-black py-2 rounded-md border-2 border-black hover:bg-yellow focus:outline-none "
+                          >
+              Login
+                          </button>
+                      </div>
+
+                      <div className="mt-4 text-center">
+                          {/* Link to navigate to the Signup page */}
+                          <Link
+                              to="/signup"
+                              className="text-blue hover:underline transition duration-300 focus:outline-none focus:ring focus:border-blue"
+                          >
+        Do not have an account? Signup here
+                          </Link>
+                      </div>
+                  </div>
+                  
+              </>
+              
           )}
       </>
   );

@@ -20,7 +20,7 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultsProps[]>([]);
     const [userInChat, setUserInChat] = useState<boolean[]>([]);
-
+    console.log("current Id : ", currentUserId);
     const handleSearch = async (query: string) => {
         try {
             const response = await getAllUsersExceptCurrent(currentUserId);
@@ -117,7 +117,7 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
                                     <h1 className="text-lg font-semibold">{user.username}</h1>
                                     {!userInChat[index] && (
                                         <button
-                                            className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+                                            className="ml-2 bg-blue text-white px-2 py-1 rounded"
                                             onClick={() => handleAddUser(user.userId)}
                                         >
                                             <FontAwesomeIcon icon={faUserPlus} /> Add

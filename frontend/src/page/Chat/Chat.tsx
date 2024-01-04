@@ -8,10 +8,6 @@ import { Socket, io } from "socket.io-client";
 import { userChats } from "../../api/ChatRequests";
 import { useLocation } from "react-router-dom";
 
-
-// interface ChatPageProps {
-//     userLogin: User;
-// }
 interface User {
     userId: string;
     username: string;
