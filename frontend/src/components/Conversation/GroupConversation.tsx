@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getUser } from "../../api/UserRequests";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserGroup } from "@fortawesome/free-solid-svg-icons";
 interface UserData {
     username: string;
     profileImage: string;
@@ -37,31 +39,18 @@ const GroupConversations: React.FC<ConversationProps> = ({ data, currentUserId }
         
     }, [data, currentUserId]);
     
-    // const defaultProfileImage = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
-    // const profileImage =
-    //     userData && userData.profileImage
-    //         ? `${process.env.REACT_APP_PUBLIC_FOLDER}${userData.profileImage}`
-    //         : defaultProfileImage;
 
-    // console.log("First Image URL:", profileImage);
-    // console.log("Second Image URL:", `http://localhost:5001/Images/${userData?.profileImage}`);
-    // console.log(process.env);
     return (
         <>
-            <div className="follower conversation">
-                {/* {online && <div className="online-dot"/>} */}
-                {/* <img 
-                    src={"http://localhost:5001/Images/" + userData?.profileImage }
-                    alt="profile" 
-                    className="followerImage"
-                    style={{width: "70px"}}
-                /> */}
-                <div className="name" style={{fontSize: "0.8rem"}}>
-                    <span>{data.groupName}</span>
-                    {/* <span>{online ? " Online": " Offline"}</span> */}
+            <div className={"group bg-white conversation border-2 border-black p-2 m-2 rounded-xl h-[100px] flex items-center transition duration-300 ease-in-out hover:shadow-md cursor-pointer"}>
+                
+                <div className="ml-3 text-sm flex items-center">
+                    <FontAwesomeIcon icon={faUserGroup} className="size-7 bg-green p-2 rounded-full border-2 border-black"/>
+                    <span className="font-bold text-darkGreen m-2">{data.groupName}</span>
+                    
                 </div>
             </div>
-            <hr />
+            
         </>
     );
 };

@@ -82,7 +82,7 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
         createChatGroup(data)
             .then((response) => {
                 console.log("Group created successfully:", response.data);
-            // Optionally, you can handle additional logic like redirecting or updating UI.
+                window.location.reload();
             })
             .catch((error) => {
                 console.error("Error creating group:", error);
@@ -114,7 +114,7 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
         <>
             <div>
                 <Popup
-                    trigger={<FontAwesomeIcon icon={faSquarePlus} />}
+                    trigger={<FontAwesomeIcon icon={faSquarePlus} className="w-6 h-6 p-2 bg-yellow rounded-[10px] border-2 border-black m-5 cursor-pointer"/>}
                     modal
                     nested
                     contentStyle={{
@@ -139,7 +139,7 @@ const AddGroup: React.FC<AddGroupProps> = ({ currentUserId }) => {
                             onChange={(e) => setGroupName(e.target.value)}
                         />
                         <button
-                            className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+                            className="ml-2 bg-blue text-white px-2 py-1 rounded"
                             onClick={handleCreateGroup}
                         >
               Create group

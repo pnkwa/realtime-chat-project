@@ -21,6 +21,7 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
     const [searchResults, setSearchResults] = useState<SearchResultsProps[]>([]);
     const [userInChat, setUserInChat] = useState<boolean[]>([]);
     console.log("current Id : ", currentUserId);
+
     const handleSearch = async (query: string) => {
         try {
             const response = await getAllUsersExceptCurrent(currentUserId);
@@ -54,7 +55,7 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
         createChat(data)
             .then((response) => {
                 console.log("Chat created successfully:", response.data);
-                // window.location.reload();
+                window.location.reload();
             })
             .catch((error) => {
                 console.error("Error creating chat:", error);
@@ -86,7 +87,7 @@ const SearchFriends: React.FC<SearchFriendsProps> = ({ currentUserId }) => {
         <>
             <div>
                 <Popup
-                    trigger={<FontAwesomeIcon icon={faUserPlus} />}
+                    trigger={<FontAwesomeIcon icon={faUserPlus} className="w-6 h-6 p-2 bg-yellow rounded-[10px] border-2 border-black m-5 cursor-pointer"/>}
                     modal
                     nested
                     contentStyle={{

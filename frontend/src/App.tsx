@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Routes, Route } from "react-router-dom";
-import Singup from "./components/login/Singup";
+import Singup from "./page/Singup";
 import Chat from "./page/Chat/Chat";
-import Login from "./components/login/Login";
+import Login from "./page/Login";
 
 interface AppProps {}
 

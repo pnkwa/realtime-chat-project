@@ -1,8 +1,11 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 // Import necessary decorators from TypeORM
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 
 @Entity()
+
+@Unique(["username"])
+
 export class User {
 
     @PrimaryGeneratedColumn()

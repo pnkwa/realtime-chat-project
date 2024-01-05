@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../ChatBox/Chatbox.css";
+// import "../ChatBox/Chatbox.css";
 // import Chat from "../../page/Chat/Chat";
 import { useNavigate, Link } from "react-router-dom";
 

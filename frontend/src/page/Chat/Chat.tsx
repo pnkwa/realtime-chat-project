@@ -148,59 +148,54 @@ const Chat = () => {
 
                     <div className="grid grid-cols-12 grid-rows-1 gap-4 h-screen w-full p-5">
 
-                        <div className="row-span-5 col-start-0 col-span-1 row-start-1 bg-blue flex flex-col items-center">
-                            <div className="w-[80%] h-[800px] bg-green rounded-[30px] border-2 border-black flex flex-col justify-center items-center">
+                        <div className="row-span-5 col-start-0 col-span-1 row-start-1 flex flex-col items-center justify-center">
+                            <div className="w-[80%] h-[100%] bg-green rounded-[30px] border-2 border-black flex flex-col items-center">
                                 <img
                                     src={"http://localhost:5001/Images/" + user.profileImage}
                                     alt="profile"
-                                    style={{ width: "120px", borderRadius: "100px" }}
+                                    className="followerImage object-cover rounded-full w-12 h-12 border-2 border-black mt-5"
                                 />
-                                <p>{user.username}</p>
-                                <SearchFriends currentUserId={user.userId}/>
-                                <AddGroup currentUserId={user.userId}></AddGroup>
+                                <p className="h-[20%] mb-[100%]">{user.username}</p>
+                                <div className="flex flex-col items-center">
+                                    <SearchFriends currentUserId={user.userId}/>
+                                    <AddGroup currentUserId={user.userId}></AddGroup>
+                                </div>
+                                
                             
                             </div>
                         </div>
 
-                        <div className="row-span-5 col-start-2 col-span-4 row-start-1 bg-yellow">
-
+                        <div className="row-span-5 col-start-2 col-span-4 row-start-1 h-[100%]">
+                            <h2 className="font-extrabold text-4xl text-center text-darkGreen">CUCUMBER CHAT</h2>
+                            <p className="text-center">your friends</p>
                             <div className="Left-side-chat">
-                                <div className="Chat-container">
-                                
-                                    <h2>Chats</h2>
-                                    <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs" />
-                                    <div className="Chat-List">
+                                <div 
+                                    className="Chat-container"
+                                    style={{
+                                        maxHeight: "800px",
+                                        overflowY: "auto",
+                                    }}
+                                >
+                                    
+                                    <div className="Chat-List max-h-[100%] overflow-y-auto">
                                         {Array.isArray(chat) &&
-                                    chat.map((chatItem) => (
-                                        <div
-                                            key={chatItem.members.join("_")}
-                                            onClick={() => setCurrentChat(chatItem)}
-                                        >
-                                            <Conversations
-                                                data={chatItem}
-                                                currentUserId={user?.userId || ""}
-                                                online = {checkOnlineUsers(chatItem)}
-                                            ></Conversations>
-                                        </div>
-                                    ))}
+                                            chat.map((chatItem) => (
+                                                <div key={chatItem.members.join("_")} onClick={() => setCurrentChat(chatItem)}>
+                                                    <Conversations
+                                                        data={chatItem}
+                                                        currentUserId={user?.userId || ""}
+                                                        online={checkOnlineUsers(chatItem)}
+                                                    ></Conversations>
+                                                </div>
+                                            ))}
                                     </div>
                                 </div>
 
-                                {onlineUsers && (
-                                    <div>
-                                        <h2>Online Users</h2>
-                                        {onlineUsers.map((onlineUser) => (
-                                            <div key={onlineUser.userId}>
-                                                <p>{onlineUser.userId}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                                
                             </div>
-
                         </div>
 
-                        <div className="row-span-5 col-start-6 col-span-12 row-start-1 bg-pink">
+                        <div className="row-span-5 col-start-6 col-span-12 row-start-1">
 
                             <div className="Right-side-chat w-[100%] h-full">
                                 <ChatBox
@@ -214,67 +209,7 @@ const Chat = () => {
                         </div>
                     </div>
     
-                    {/* <div className="w-[5%] h-[90%] bg-green rounded-[30px] border-2 border-black flex flex-col justify-center items-center">
-                        <img
-                            src={"http://localhost:5001/Images/" + user.profileImage}
-                            alt="profile"
-                            style={{ width: "120px", borderRadius: "100px" }}
-                        />
-                        <p>{user.username}</p>
-                        <SearchFriends currentUserId={user.userId}/>
-                        <AddGroup currentUserId={user.userId}></AddGroup>
-                            
-                    </div> */}
-                        
-
-                    <div className="Chat flex flex-row">
-                        {/* Left side */}
-                      
-                        {/* <div className="Left-side-chat">
-                            <div className="Chat-container">
-                                
-                                <h2>Chats</h2>
-                                <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs" />
-                                <div className="Chat-List">
-                                    {Array.isArray(chat) &&
-                                    chat.map((chatItem) => (
-                                        <div
-                                            key={chatItem.members.join("_")}
-                                            onClick={() => setCurrentChat(chatItem)}
-                                        >
-                                            <Conversations
-                                                data={chatItem}
-                                                currentUserId={user?.userId || ""}
-                                                online = {checkOnlineUsers(chatItem)}
-                                            ></Conversations>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {onlineUsers && (
-                                <div>
-                                    <h2>Online Users</h2>
-                                    {onlineUsers.map((onlineUser) => (
-                                        <div key={onlineUser.userId}>
-                                            <p>{onlineUser.userId}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div> */}
-
-                        {/* Right side */}
-                        {/* <div className="Right-side-chat">
-                            <ChatBox
-                                chat={currentChat}
-                                currentUserId={user.userId}
-                                setSendMessage={setSendMessage}
-                                receivedMessages={receiveMessages}
-                            ></ChatBox>
-
-                        </div> */}
-                    </div>
+                   
                 </div>
             )}
 

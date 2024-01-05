@@ -54,22 +54,24 @@ const Conversations: React.FC<ConversationProps> = ({ data, currentUserId, onlin
     
     return (
         <>
-            <div className="follower conversation">
-                {online && <div className="online-dot"/>}
-                <img 
-                    src={"http://localhost:5001/Images/" + userData?.profileImage }
-                    alt="profile" 
-                    className="followerImage"
-                    style={{width: "70px"}}
+            <div className={"follower conversation bg-white border-2 border-black p-5 m-2 rounded-xl h-[100px] flex items-center transition duration-300 ease-in-out hover:shadow-md cursor-pointer"}>
+                
+                <img
+                    src={`http://localhost:5001/Images/${userData?.profileImage}`}
+                    alt="profile"
+                    className="followerImage object-cover rounded-full w-12 h-12 border-2 border-black"
                 />
-                <div className="name" style={{fontSize: "0.8rem"}}>
-                    <span>{userData?.username}</span>
-                    <span>{online ? " Online": " Offline"}</span>
+                
+                <div className="ml-3 text-sm">
+                    <span className="font-bold text-darkGreen">{userData?.username}</span>
+                    <span className={`text-xs ${online ? "text-green-500" : "text-gray-500"}`}>{online ? " Online" : " Offline"}</span>
                 </div>
+
+                {online && <div className="online-dot bg-green w-3 h-3 rounded-full mr-2 m-2" />}
             </div>
-            <hr />
+            <hr className="my-2" />
         </>
     );
 };
-
+    
 export default Conversations;

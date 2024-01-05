@@ -65,11 +65,6 @@ router.get("/chat/find/:firstId/:secondId", async(req:Request, res:Response) => 
 		const firstId: string = req.params.firstId;
 		const secondId: string = req.params.secondId;
 
-		// if (isNaN(firstId || secondId)){
-		// 	res.status(400).json({error: "Invalid user ID"});
-		// 	return;
-		// }
-
 		const chat = await chatRepository.findBy({
 			members: ArrayContains([firstId, secondId])            
 		});

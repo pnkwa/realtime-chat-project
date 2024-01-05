@@ -3,18 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { getUser } from "../../api/UserRequests";
 import { addMessages, getMassages } from "../../api/MessageRequets";
 import InputEmoji from "react-input-emoji";
-import TimeAgo from "react-timeago";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeadphones, faMagnifyingGlass, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { addUrl } from "../../api/UrlRequests";
 import AudioBox from "./AudioBox";
+import { format } from "date-fns";  
+
 
 interface ChatBoxProps {
   chat: {
     chatId: string;
     members: string[];
+    groupName: string;
   } | null;
   currentUserId: string;
   setSendMessage: (
@@ -231,7 +233,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         return match ? match[1] : null;
     };
 
-    // Inside ChatBox component
+    // Inside ChatBox search keyword component
     const handleSearch = (term: string) => {
         setSearchTerm(term);
         setIsTyping(!!term); // Set isTyping to true if there is a search term, false otherwise
@@ -269,29 +271,49 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     setIsTyping(false);
                     setSearchTerm("");
 
-
                 }
             }
         }
     };
 
-    
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return format(date, "dd MMM HH:mm"); // Customize the format as needed
+    };
   
-    // function handleOnEnter(text: string): void {
-    //     handleSend();
-    // }
+
 
     return (
         <div className="ChatBox-container bg-white rounded-[30px] border-2 border-black w-full h-full">
+            
+            
             <div className="chat-header flex flex-row h-[10%] items-center px-4">
-                <img
-                    src={"http://localhost:5001/Images/" + userData?.profileImage}
-                    alt="profile"
-                    className="followerImage object-cover rounded-full w-12 h-12 border-2 border-black"
-                />
-                <div className="name ml-4 text-lg font-bold">
-                    <span>{userData?.username}</span>
-                </div>
+
+                {chat.members.length === 2 ? (
+                    <>
+                        <img
+                            src={"http://localhost:5001/Images/" + userData?.profileImage}
+                            alt="profile"
+                            className="followerImage object-cover rounded-full w-12 h-12 border-2 border-black"
+                        />
+
+                        <div className="name ml-4 text-lg font-bold">
+                            <span>{userData?.username}</span>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {chat.members.length > 2 && (
+
+                            <div className="name ml-4 text-lg font-bold">
+                                <span>{chat.groupName}</span>
+                            </div>
+                           
+                        )}
+                    </>
+                )}
+                
                 <div className="chat-search ml-auto">
                     <div className="flex items-center">
                         <input
@@ -331,15 +353,19 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                     )}
                 </div>
             </div>
+
+
             <hr />
+
+
             <div className="chat-body flex flex-col gap-2 p-6 overflow-auto h-[80%]">
                 {messages.map((message) => (
                     <div
                         key={message.msgId}
                         ref={chatBodyRef}
-                        className={`message ${message.senderId === currentUserId 
-                            ? "own" 
-                            : ""
+                        className={`message  w-fit ${message.senderId === currentUserId 
+                            ? "own self-end" 
+                            : "friend self-start" 
                         } message-${message.msgId}`}
                     >   
                         
@@ -359,31 +385,49 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         ) : (
                             <>
                                 {chat.members.length === 2 && message.senderId !== currentUserId ? (
-                                    <h3>username: {userData?.username}</h3>
+                                    <h3 className="font-semibold">{userData?.username}</h3>
                                 ) : (
                                     <>
                                         {chat.members.length > 2 && message.senderId !== currentUserId ? (
-                                            <h3>
-                                                {userGroupData
-                                                    .filter(user => user.userId === message.senderId)
-                                                    .map(user => (
-                                                        <span key={user.userId}>{user.username} </span>
-                                                    ))}
-                                            </h3>
+
+                                            <div>
+                                                <h3>
+                                                    {userGroupData
+                                                        .filter(user => user.userId === message.senderId)
+                                                        .map(user => (
+                                                            <span key={user.userId} className="font-semibold">{user.username} </span>
+                                                        ))}
+                                                </h3>
+
+                                                
+                                            </div>
+                                           
                                         ) : null}
                                     </>
                                 )}
+                                
+                                
+                                <h1 className={
+                                    `message ${message.senderId === currentUserId 
+                                        ? "own bg-cream self-end text-wrap hover:text-balance rounded-bl-3xl rounded-tl-3xl rounded-tr-xl" 
+                                        : "friend bg-green self-start rounded-br-3xl rounded-tr-3xl rounded-tl-xl"}
+                                    whitespace-normal text-balance border-2 border-black p-3
+                                    `} 
+                                style={{ 
+                                    overflowWrap: "break-word",
+                                    maxWidth: message.text.length > 50 ? "300px" : "auto" 
+                                }}>
+                                    {message.text}
+                                    {message.key_video && (
+                                        <AudioBox audioKey={message.key_video}></AudioBox>
+                                    )}
+                                </h1>
 
-                                {message.key_video && (
-                                    <AudioBox audioKey={message.key_video}></AudioBox>
-                                )}
-                                <h1>{message.text}</h1>
+
                                
                             </>
                         )}
-                        <span>
-                            <TimeAgo date={message.createAt} />
-                        </span>
+                        <span className="text-darkGreen">{formatDate(message.createAt)}</span>
                     </div>
                 ))}
             </div>
@@ -397,27 +441,34 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         nested
                         contentStyle={{
                             borderRadius: "10px",
-                            width: "80%",
-                            height: "300px"
+                            width: "60%",
+                            height: "500px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            background: "#C7DCA7",
                         }}
                     >
-                        <div>
-                            <h1>music player</h1>
-                            <input 
-                                type="text" 
-                                placeholder="link" 
-                                className="input input-bordered w-full max-w-xs" 
-                                onChange={handleUrlChange}
-                            />
-                            {/* <input type="file" className="file-input file-input-bordered w-full max-w-xs" /> */}
-                            <input 
-                                type="button" 
-                                value="Send" 
-                                className="btn" 
-                                onClick={handleUrlSend}
-                            />
+                        {/* Popup content */}
+                        <div className="rounded-lg p-8 w-[80%] h-full">
+                            <div className="flex flex-col items-center justify-center h-full">
+                                <h1 className="text-2xl font-bold mb-4">Music Player</h1>
+                                <input 
+                                    type="text" 
+                                    placeholder="Enter music link" 
+                                    className="border-2 border-black rounded-full py-2 px-4 mb-4 w-full"
+                                    onChange={handleUrlChange}
+                                />
+                                <input 
+                                    type="button" 
+                                    value="Send" 
+                                    className="bg-blue text-white py-2 px-4 rounded-full cursor-pointer border-2 border-black"
+                                    onClick={handleUrlSend}
+                                />
+                            </div>
                         </div>
                     </Popup>
+
                     
                     
 
@@ -428,8 +479,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                         onChange={handleChange}
                         borderColor="white"
                         inputClass="bg-yellow border-2 rounded-full border-black"
+                        
                     />
-                    <FontAwesomeIcon icon={["far", "coffee"]} />
                 </div>
                 <div className="send-button button" onClick={handleSend}>
                     <FontAwesomeIcon icon={faPaperPlane} />                
